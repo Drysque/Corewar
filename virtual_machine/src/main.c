@@ -7,7 +7,7 @@
 
 #include "my.h"
 
-int main(int argc, char const *argv[])
+int main(int ac, char const *av[])
 {
     my_printf("%s\n", "coucou, la lib fonctionne");
     return 0;
