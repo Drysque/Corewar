@@ -7,6 +7,7 @@
 
 #include "asm.h"
 #include "my.h"
+#include "op.h"
 
 char *get_next_instruction(int fd)
 {
@@ -14,7 +15,7 @@ char *get_next_instruction(int fd)
 
     if (instruction == NULL)
         return NULL;
-    if (instruction[0] == '#' || my_strlen(instruction) <= 0)// # = COMMENT_CHAR
+    if (instruction[0] == COMMENT_CHAR || my_strlen(instruction) <= 0)
         return get_next_instruction(fd);
     return instruction;
 }
