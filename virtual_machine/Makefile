@@ -5,7 +5,7 @@
 ## Makefile Corewar VirtualMachine
 ##
 
-SH			=	sh
+SHELL		=	sh
 
 CC			=	gcc
 
@@ -13,11 +13,17 @@ AR_RC		=	ar rc
 
 RM			=	rm -f
 
-SRC			=	\
+SRCDIR		=	./src
+
+SRC			=	$(SRCDIR)/main.c\
 
 OBJ			=	$(SRC:.c=.o)
 
-CPPFLAGS	=	-I./include/
+CPPFLAGS	=	-iquote ../include/
+
+LDFLAGS		=	-L../lib/my
+
+LDLIBS		=	-lmy
 
 DEBUGFLAGS	=	-g3 -Wall -Wextra
 
@@ -26,10 +32,10 @@ NAME		=	corewar
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ)
+	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 
 debug:
-	$(CC) -o $(NAME) $(SRC) $(CPPFLAGS) $(DEBUGFLAGS)
+	$(CC) -o $(NAME) $(SRC) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS) $(DEBUGFLAGS)
 
 clean:
 	@$(RM) $(OBJ)
