@@ -24,6 +24,7 @@ int my_strcmp(char const *s1, char const *s2);
 int my_strncmp(char const *s1, char const *s2, int n);
 int my_strcmp_diff(char const *s1, char const *s2);
 
+char *get_next_line(int fd);
 char **my_str_delim_array(char const *str, char *delims);
 
 #endif /* MY_H_ */

@@ -28,7 +28,7 @@ static char *check_file(char const *file, int *fd)
 
     *fd = open(file, O_RDONLY);
     if (*fd < 0) {
-        my_printf("%s: no such file\n", file);
+        my_printf("\e[1m\e[31m%s: no such file\e[0m\n", file);
         return NULL;
     }
     dup = my_strdup(file);
@@ -36,6 +36,16 @@ static char *check_file(char const *file, int *fd)
         if (dup[i] == '.')
             dup[i] = '\0';
     return dup;
+}
+
+void compile(int fd)
+{
+    char *str;
+
+    while ((str = get_next_instruction(fd)) != NULL) {
+        my_printf("instruction found: {\e[1m\e[34m%s\e[0m}\n", str);/*DEBUG*/
+        free(str);
+    }
 }
 
 int main(int ac, char const *av[])
@@ -47,9 +57,13 @@ int main(int ac, char const *av[])
     name = check_file(av[1], &fd);//changes fd of file to read, return name to compile
     if (name == NULL)
         return 84;
-    my_printf("file: {%s}. fd: {%d}. dest: {%s.cor}\n", av[1], fd, name);// ca marche jusqu'ici
-    //linter(fd); + lseek
-    //compile(fd); read fd, write into "name"
+    my_printf("file: {\e[1m\e[32m%s\e[0m}. fd: {\e[1m\e[32m%d\e[0m}. dest: {\e[1m\e[32m%s.cor\e[0m}\n", av[1], fd, name);/*DEBUG*/
+
+    //linter(fd); + lseek /*avec get_next_instruction*/
+    compile(fd);
+
     free(name);
+    close(fd);
+
     return 0;
 }

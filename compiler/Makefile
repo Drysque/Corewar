@@ -15,7 +15,8 @@ RM			=	rm -f
 
 SRCDIR		=	./src
 
-SRC			=	$(SRCDIR)/main.c\
+SRC			=	$(SRCDIR)/main.c				\
+				$(SRCDIR)/get_next_instruction.c\
 
 OBJ			=	$(SRC:.c=.o)
 

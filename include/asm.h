@@ -10,5 +10,8 @@
 
 #include <stdlib.h>
 #include <fcntl.h>
+#include <unistd.h>
+
+char *get_next_instruction(int fd);
 
 #endif /* ASM_H_ */
