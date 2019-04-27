@@ -16,7 +16,12 @@ RM			=	rm -f
 SRCDIR		=	./src
 
 SRC			=	$(SRCDIR)/main.c				\
+				$(SRCDIR)/compile.c				\
 				$(SRCDIR)/get_next_instruction.c\
+				$(SRCDIR)/create_header.c		\
+				$(SRCDIR)/create_label.c		\
+				$(SRCDIR)/parse_instruction.c	\
+				$(SRCDIR)/write_in_file.c		\
 
 OBJ			=	$(SRC:.c=.o)
 
