@@ -15,7 +15,8 @@ RM			=	rm -f
 
 SRCDIR		=	./src
 
-SRC			=	$(SRCDIR)/main.c\
+SRC			=	$(SRCDIR)/main.c			\
+				$(SRCDIR)/parameters/get_parameters.c
 
 OBJ			=	$(SRC:.c=.o)
 

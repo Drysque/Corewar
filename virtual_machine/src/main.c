@@ -6,9 +6,13 @@
 */
 
 #include "my.h"
+#include "vm.h"
 
-int main(int ac, char const *av[])
+int main(int argc, char **argv)
 {
-    my_printf("%s\n", "coucou, la lib fonctionne");
-    return 0;
+    environment_t *env = read_parameters(argc, argv);
+
+    if (env == NULL)
+        return (ERROR);
+    return (0);
 }
