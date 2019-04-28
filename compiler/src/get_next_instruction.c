@@ -15,7 +15,9 @@ char *get_next_instruction(int fd)
 
     if (instruction == NULL)
         return NULL;
-    if (instruction[0] == COMMENT_CHAR || my_strlen(instruction) <= 0)
+    if (instruction[0] == COMMENT_CHAR || my_strlen(instruction) <= 0) {
+        free(instruction);
         return get_next_instruction(fd);
+    }
     return instruction;
 }

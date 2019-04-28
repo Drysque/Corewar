@@ -9,9 +9,6 @@
 #include "asm.h"
 #include "op.h"
 
-// #define NAME_CMD_STRING         ".name"
-// #define COMMENT_CMD_STRING      ".comment"
-
 header_t *create_header(int fd)
 {
     header_t *header = malloc(sizeof(header_t));
@@ -21,11 +18,11 @@ header_t *create_header(int fd)
     header->prog_size = 0;
     str = get_next_instruction(fd);
     str[my_strlen(str) - 1] = 0;
-    my_strcpy(header->prog_name, &str[7]);
+    my_strcpy(header->prog_name, &str[my_strlen(NAME_CMD_STRING) + 2]);
     free(str);
     str = get_next_instruction(fd);
     str[my_strlen(str) - 1] = 0;
-    my_strcpy(header->comment, &str[10]);
+    my_strcpy(header->comment, &str[my_strlen(COMMENT_CMD_STRING) + 2]);
     free(str);
     return header;
 }

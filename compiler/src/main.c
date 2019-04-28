@@ -50,7 +50,7 @@ int main(int ac, char const *av[])
     /*DEBUG*/my_printf("file: {\e[1m\e[32m%s\e[0m}. fd: {\e[1m\e[32m%d\e[0m}. dest: {\e[1m\e[32m%s.cor\e[0m}\n\n", av[1], fd, name);
 
     //linter(fd); + lseek /*avec get_next_instruction*/
-    compile(fd);
+    compile(fd, name);
 
     free(name);
     close(fd);

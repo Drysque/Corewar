@@ -24,11 +24,13 @@ typedef struct label_s {
     struct label_s *next_label;
 } label_t;
 
-void compile(int fd);
+
 header_t *create_header(int fd);
 label_t *create_label(char *name);
 char *get_next_instruction(int fd);
-void write_in_file(header_t *header, label_t *label_list);
+void compile(int fd, char *new_file);
 void parse_instruction(char *instruction, label_t **label_list);
+void add_instruction(char **instruction_tab, op_list_t **op_list);
+void write_in_file(header_t *header, label_t *label_list, char *new_file);
 
 #endif /* ASM_H_ */

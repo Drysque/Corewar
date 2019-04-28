@@ -5,10 +5,32 @@
 ** starts the compilation
 */
 
-// #include "my.h"
 #include "asm.h"
 
-void compile(int fd)
+static void free_op(op_list_t *instruction_list)
+{
+    if (instruction_list == NULL)
+        return;
+    free_op(instruction_list->next_op);
+    free(instruction_list->op->mnemonique);
+    free(instruction_list->op);
+    free(instruction_list);
+}
+static void free_label(label_t *label_list)
+{
+    if (label_list == NULL)
+        return;
+    free_label(label_list->next_label);
+    free_op(label_list->instruction_list);
+    free(label_list);
+}
+void free_all(header_t *header, label_t *label_list)
+{
+    free(header);
+    free_label(label_list);
+}
+
+void compile(int fd, char *new_file)
 {
     char *str;
     header_t *header = create_header(fd);
@@ -20,6 +42,6 @@ void compile(int fd)
         parse_instruction(str, &label_list);
         free(str);
     }
-    write_in_file(header, label_list);
-    // free_all(header, label_list);
+    write_in_file(header, label_list, new_file);
+    free_all(header, label_list);
 }

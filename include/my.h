@@ -10,6 +10,7 @@
 
 int my_getnbr(char const *str);
 int my_strlen(char const *str);
+int my_tablen(char const **tab);
 
 void my_printf(char *str, ...);
 void my_putchar(char c);
