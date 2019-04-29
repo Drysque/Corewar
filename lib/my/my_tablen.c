@@ -5,7 +5,7 @@
 ** returns the len of a tab
 */
 
-int my_tablen(char const **tab)
+int my_tablen(const char **tab)
 {
     int len = 0;
 

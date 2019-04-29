@@ -36,6 +36,7 @@ SRC		=	my_printf.c				\
 			my_strcpy.c				\
 			my_strdup.c				\
 			my_strlen.c				\
+			my_strncpy.c			\
 			my_strndup.c			\
 			my_tablen.c				\
 			switch_flags.c			\

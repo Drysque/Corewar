@@ -17,8 +17,9 @@ void my_putchar(char c);
 int my_putstr(char const *str);
 
 char *my_strcpy(char *dest, char const *src);
-char *my_strncpy(char const *src, int n);
+char *my_strncpy(char *dest, char const *src, int n);
 char *my_strdup(char const *src);
+char *my_strndup(char const *src);
 char *my_strcat(char *buffer, char *str);
 
 int my_strcmp(char const *s1, char const *s2);

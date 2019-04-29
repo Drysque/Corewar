@@ -16,6 +16,7 @@ RM			=	rm -f
 SRCDIR		=	./src
 
 SRC			=	$(SRCDIR)/main.c				\
+				../include/op.c					\
 				$(SRCDIR)/add_instruction.c		\
 				$(SRCDIR)/compile.c				\
 				$(SRCDIR)/get_next_instruction.c\

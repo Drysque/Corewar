@@ -24,7 +24,6 @@ typedef struct label_s {
     struct label_s *next_label;
 } label_t;
 
-
 header_t *create_header(int fd);
 label_t *create_label(char *name);
 char *get_next_instruction(int fd);
