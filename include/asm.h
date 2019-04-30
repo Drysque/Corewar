@@ -14,7 +14,9 @@
 #include "op.h"
 
 typedef struct op_list_s {
-    op_t *op;
+    char code;
+    args_type_t type[MAX_ARGS_NUMBER];
+    char args[MAX_ARGS_NUMBER];
     struct op_list_s *next_op;
 } op_list_t;
 

@@ -12,10 +12,9 @@ static void free_op(op_list_t *instruction_list)
     if (instruction_list == NULL)
         return;
     free_op(instruction_list->next_op);
-    free(instruction_list->op->mnemonique);
-    free(instruction_list->op);
     free(instruction_list);
 }
+
 static void free_label(label_t *label_list)
 {
     if (label_list == NULL)
@@ -24,6 +23,7 @@ static void free_label(label_t *label_list)
     free_op(label_list->instruction_list);
     free(label_list);
 }
+
 void free_all(header_t *header, label_t *label_list)
 {
     free(header);
