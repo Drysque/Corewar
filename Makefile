@@ -9,9 +9,9 @@ SHELL		=	sh
 
 MAKE		=	make
 
-COMPILERDIR	=	./compiler
+COMPILERDIR	=	./asm
 
-VMDIR		=	./virtual_machine
+VMDIR		=	./corewar
 
 LIBDIR		=	./lib/my
 
