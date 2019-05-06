@@ -25,7 +25,6 @@ static void print_op(op_list_t *instruction_list, int fd)
             break;
         case 2: write(fd, "\0\0\0", 3);
             write(fd, &instruction_list->args[i], 1);
-            my_printf("%d\n", instruction_list->args[i]);
             break;
         case 3: write(fd, "\0", 1);
             write(fd, &instruction_list->args[i], 1);

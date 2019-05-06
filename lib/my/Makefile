@@ -16,6 +16,7 @@ NAME	=	libmy.a
 SRC		=	my_printf.c				\
 			format_switches.c		\
 			get_next_line.c			\
+			my_calloc.c				\
 			my_getnbr.c				\
 			my_put_long_base.c		\
 			my_put_long_unsigned.c	\

@@ -16,10 +16,11 @@ void get_args_type(char *type, char *args, char **instr_tab)
             // my_printf("0x%x ", my_getnbr(&instr_tab[i][1]));
             args[i] = my_getnbr(&instr_tab[i][1]);
         }
-        else if (instr_tab[i][0] == '%') {
+        else if (instr_tab[i][0] == '%') {//direct
             type[i] = 0b10;
             // my_printf("0x00 0x00 0x00 0x%x ", my_getnbr(&instr_tab[i][1]));
             args[i] = my_getnbr(&instr_tab[i][1]);
+            if (instr_tab[i][1] == LABEL_CHAR) {args[i] = 15;}
         }
         else {
             type[i] = 0b11;
