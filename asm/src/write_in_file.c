@@ -16,18 +16,23 @@ static void print_op(op_list_t *instruction_list, int fd)
         return;
     print_op(instruction_list->next_op, fd);
     write(fd, &instruction_list->code, sizeof(char));
+    printf("\ncode: %d\n", instruction_list->code);
     for (int i = 0; i < MAX_ARGS_NUMBER; i++)
         type |= instruction_list->type[i] << (2 * (MAX_ARGS_NUMBER - 1 - i));
     write(fd, &type, 1);
+    printf("type: %d\n", type);
     for (int i = 0; i < MAX_ARGS_NUMBER && instruction_list->type[i]; i++) {
         switch (instruction_list->type[i]) {
-        case 1: write(fd, &instruction_list->args[i], 1);
+        case 1: write(fd, instruction_list->args[i], 1);
+            printf("arg: register 0x%d\n", *((char *)instruction_list->args[i]));
             break;
-        case 2: write(fd, "\0\0\0", 3);
-            write(fd, &instruction_list->args[i], 1);
+        case 2: //write(fd, "\0\0\0", 3);
+            printf("arg: indirect 0x0 0x0 0x0 0x%x\n", *((int *)instruction_list->args[i]));
+            write(fd, &instruction_list->args[i], 4);
             break;
-        case 3: write(fd, "\0", 1);
-            write(fd, &instruction_list->args[i], 1);
+        case 3: //write(fd, "\0", 1);
+            printf("arg: direct 0x0 0x%d\n", *((u_int16_t *)instruction_list->args[i]));
+            write(fd, &instruction_list->args[i], 2);
             break;
         default: break;
         }
