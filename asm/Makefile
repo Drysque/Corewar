@@ -19,9 +19,9 @@ SRC			=	$(SRCDIR)/main.c				\
 				../include/op.c					\
 				$(SRCDIR)/add_instruction.c		\
 				$(SRCDIR)/compile.c				\
+				$(SRCDIR)/fill_needed_label.c	\
 				$(SRCDIR)/get_next_instruction.c\
-				$(SRCDIR)/create_header.c		\
-				$(SRCDIR)/create_label.c		\
+				$(SRCDIR)/my_write.c			\
 				$(SRCDIR)/parse_instruction.c	\
 				$(SRCDIR)/write_in_file.c		\
 

@@ -16,22 +16,22 @@ static void print_op(op_list_t *instruction_list, int fd)
         return;
     print_op(instruction_list->next_op, fd);
     write(fd, &instruction_list->code, sizeof(char));
-    printf("\ncode: %d\n", instruction_list->code);
+   //printf("\ncode: %d\n", instruction_list->code);
     for (int i = 0; i < MAX_ARGS_NUMBER; i++)
         type |= instruction_list->type[i] << (2 * (MAX_ARGS_NUMBER - 1 - i));
     write(fd, &type, 1);
-    printf("type: %d\n", type);
+   //printf("type: %d\n", type);
     for (int i = 0; i < MAX_ARGS_NUMBER && instruction_list->type[i]; i++) {
         switch (instruction_list->type[i]) {
-        case 1: write(fd, instruction_list->args[i], 1);
-            printf("arg: register 0x%d\n", *((char *)instruction_list->args[i]));
+        case 1: write(fd, &instruction_list->args[i], 1);
+           //printf("arg: register 0x%d\n", *((char *)instruction_list->args[i]));
             break;
         case 2: //write(fd, "\0\0\0", 3);
-            printf("arg: indirect 0x0 0x0 0x0 0x%x\n", *((int *)instruction_list->args[i]));
+           //printf("arg: indirect 0x0 0x0 0x0 0x%x\n", *((int *)instruction_list->args[i]));
             write(fd, &instruction_list->args[i], 4);
             break;
         case 3: //write(fd, "\0", 1);
-            printf("arg: direct 0x0 0x%d\n", *((u_int16_t *)instruction_list->args[i]));
+           //printf("arg: direct 0x0 0x%d\n", *((u_int16_t *)instruction_list->args[i]));
             write(fd, &instruction_list->args[i], 2);
             break;
         default: break;
@@ -48,22 +48,23 @@ static void print_op(op_list_t *instruction_list, int fd)
     // /*DEBUG*/my_printf("\e[0m\n");
 }
 
-static void print_label(label_t *label_list, int fd)
-{
-    if (label_list == NULL)
-        return;
-    print_label(label_list->next_label, fd);
-    print_op(label_list->instruction_list, fd);
-    // /*DEBUG*/if (label_list->instruction_list != NULL)
-    // /*DEBUG*/    my_printf("%s:\n", label_list->name);
-}
+// static void print_label(label_t *label_list, int fd)
+// {
+//     if (label_list == NULL)
+//         return;
+//     print_label(label_list->next_label, fd);
+//     print_op(label_list->instruction_list, fd);
+//     // /*DEBUG*/if (label_list->instruction_list != NULL)
+//     // /*DEBUG*/    my_printf("%s:\n", label_list->name);
+// }
 
 // static void print_header(header_t *header, int fd)
 // {
 //     // /*DEBUG*/my_printf("header: \n\t%x\n\t{%s}, {%s}\n\n", header->magic, header->prog_name, header->comment);
 // }
 
-void write_in_file(header_t *header, label_t *label_list, char *new_file)
+void write_in_file(header_t *header, label_t *label_list,
+    op_list_t *op_list, char *new_file)
 {
     int fd = open(new_file, O_TRUNC | O_CREAT | O_RDWR, 00666);
 
@@ -72,6 +73,14 @@ void write_in_file(header_t *header, label_t *label_list, char *new_file)
         exit(84);
     }
     write(fd, header, sizeof(header_t));
-    print_label(label_list, fd);
+    print_op(op_list, fd);
+
+    //FINAL
+    fill_needed_label(fd, label_list);
+    header->magic = COREWAR_EXEC_MAGIC;
+    header->prog_size = offset_pos(0, GET);
+    lseek(fd, 0, SEEK_SET);//GOBACK
+    write(fd, header, sizeof(header_t));
+
     close(fd);
 }
