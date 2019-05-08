@@ -40,7 +40,7 @@ void get_args_type(char *type, int *args, char **instr_tab)
 void add_instruction(char **instr_tab, op_list_t **op_list)
 {
     op_list_t *new_op = my_calloc(sizeof(op_list_t));
-    char **args = my_str_delim_array(instr_tab[1], (char[]){SEPARATOR_CHAR, 0});
+    // char **args = my_str_delim_array(instr_tab[1], (char[]){SEPARATOR_CHAR, 0});
 
     // new_op->mnemonique = instr_tab[0];
     for (int i = 0; op_tab[i].mnemonique != 0; i++) {
@@ -48,12 +48,12 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
             new_op->code = op_tab[i].code;
             offset_pos(1, ADD);
 
-            if (my_tablen((char const **) args) != op_tab[i].nbr_args) {
+            if (my_tablen((char const **) &instr_tab[1]) != op_tab[i].nbr_args) {
                 my_printf("wrong number of arguments for instruction %s (%s)",
                     instr_tab[0], instr_tab[1]);
                 exit(84);
             }
-            get_args_type(new_op->type, new_op->args, args);
+            get_args_type(new_op->type, new_op->args, instr_tab);
         }
     }
     new_op->next_op = *op_list;
