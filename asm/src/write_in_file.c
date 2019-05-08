@@ -19,11 +19,11 @@ static void print_op(op_list_t *instruction_list, int fd)
     for (int i = 0; i < MAX_ARGS_NUMBER; i++)
         type |= instruction_list->type[i] << (2 * (MAX_ARGS_NUMBER - 1 - i));
     write(fd, &type, 1);
-    //if(instruction code == zjmp ou else, ecrire meme taille)
+    //if(instruction code == zjmp ou else, ecrire meme taille)offset_pos(3, SUB);
     for (int i = 0; i < MAX_ARGS_NUMBER && instruction_list->type[i]; i++) {
         switch (instruction_list->type[i]) {
         case 1:
-            write(fd,    &(  (char[4]) {instruction_list->args[i]}   )[3]    , 1);
+            write(fd, &instruction_list->args[i], 1);
             //printf("arg: register 0x%d\n", *((char *)instruction_list->args[i]));
             break;
         case 2: //write(fd, "\0\0\0", 3);

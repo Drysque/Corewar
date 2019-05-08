@@ -72,7 +72,7 @@ extern  op_t    op_tab[];
 #define PROG_NAME_LENGTH        128
 #define COMMENT_LENGTH          2048
 
-#define COREWAR_EXEC_MAGIC      0xea83f3
+#define COREWAR_EXEC_MAGIC      0xf383ea00
 struct header_s
 {
    int  magic;

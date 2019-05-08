@@ -13,25 +13,24 @@ void get_args_type(char *type, int *args, char **instr_tab)
     for (int i = 0; instr_tab[i]; i++) {
         if (instr_tab[i][0] == 'r') {
             type[i] = 0b01;
-            // my_printf("0x%x ", my_getnbr(&instr_tab[i][1]));
             args[i] = my_str_to_char(&instr_tab[i][1]);
             offset_pos(1, ADD);
+            // my_printf("0x%x ", my_getnbr(&instr_tab[i][1]));
         }
         else if (instr_tab[i][0] == '%') {
-            // my_printf("0x00 0x00 0x00 0x%x ", my_getnbr(&instr_tab[i][1]));
             type[i] = 0b10;
+            offset_pos(4, ADD);
             if (instr_tab[i][1] == LABEL_CHAR) {
-                args[i] = 0;
                 add_need_label(&instr_tab[i][2], ADD);
-                offset_pos(1, ADD);
             } else {
                 args[i] = my_getnbr(&instr_tab[i][1]);
-                offset_pos(1, ADD);
             }
+            // my_printf("0x00 0x00 0x00 0x%x ", my_getnbr(&instr_tab[i][1]));
         }
         else {
             type[i] = 0b11;
             args[i] = my_str_to_int16(instr_tab[i]);
+            offset_pos(2, ADD);
             // my_printf("0x00 0x%x ", my_getnbr(instr_tab[i]));
         }
     }
