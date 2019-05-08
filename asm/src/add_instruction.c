@@ -50,10 +50,11 @@ static void clean_arguments(char **instr_tab)
 
 void add_instruction(char **instr_tab, op_list_t **op_list)
 {
-    op_list_t *new_op = my_calloc(sizeof(op_list_t));
-    // char **args = my_str_delim_array(instr_tab[1], (char[]){SEPARATOR_CHAR, 0});
+    op_list_t *new_op;
 
-    // new_op->mnemonique = instr_tab[0];
+    if (instr_tab[0] == NULL)
+        return;
+    new_op = my_calloc(sizeof(op_list_t));
     clean_arguments(&instr_tab[1]);
     for (int i = 0; op_tab[i].mnemonique != 0; i++) {
         if (my_strcmp(op_tab[i].mnemonique, instr_tab[0])) {
@@ -61,13 +62,16 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
             offset_pos(1, ADD);
 
             if (my_tablen((char const **) &instr_tab[1]) != op_tab[i].nbr_args) {
-                my_printf("wrong number of arguments for instruction %s (%d)",
+                my_printf("wrong number of arguments for instruction %s (%d)\n",
                     instr_tab[0], my_tablen((char const **) &instr_tab[1]));
                 exit(84);
             }
             get_args_type(new_op->type, new_op->args, &instr_tab[1]);
+            new_op->next_op = *op_list;
+            *op_list = new_op;
+            return;
         }
     }
-    new_op->next_op = *op_list;
-    *op_list = new_op;
+    my_printf("unknown instruction %s\n", instr_tab[0]);
+    exit(84);
 }

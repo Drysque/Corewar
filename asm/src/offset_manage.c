@@ -1,14 +1,12 @@
 /*
 ** EPITECH PROJECT, 2019
-** my_write.c
+** offset_manage.c
 ** File description:
 ** registers written bytes
 */
 
 #include "asm.h"
 #include "my.h"
-
-///!\ PAS BESOIN, LSEEK DONNE L'ENDROIT OU ON EST DEPUIS LE DEBUT
 
 op_need_label_t *add_need_label(char *name, int status)
 {
@@ -35,14 +33,3 @@ off_t offset_pos(ssize_t written, int status)
         offset -= written;
     return offset;
 }
-
-// void my_write(int fd, void *buf, size_t n)
-// {
-//     ssize_t written = write(fd, buf, n);
-//
-//     if (write == -1) {
-//         my_printf("syscall error: write\n");
-//         exit(84);
-//     }
-//     offset_pos(written, ADD);
-// }

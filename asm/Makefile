@@ -21,7 +21,7 @@ SRC			=	$(SRCDIR)/main.c				\
 				$(SRCDIR)/compile.c				\
 				$(SRCDIR)/fill_needed_label.c	\
 				$(SRCDIR)/get_next_instruction.c\
-				$(SRCDIR)/my_write.c			\
+				$(SRCDIR)/offset_manage.c		\
 				$(SRCDIR)/parse_instruction.c	\
 				$(SRCDIR)/write_in_file.c		\
 

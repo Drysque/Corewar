@@ -16,52 +16,28 @@ static void print_op(op_list_t *instruction_list, int fd)
         return;
     print_op(instruction_list->next_op, fd);
     write(fd, &instruction_list->code, sizeof(char));
-   //printf("\ncode: %d\n", instruction_list->code);
     for (int i = 0; i < MAX_ARGS_NUMBER; i++)
         type |= instruction_list->type[i] << (2 * (MAX_ARGS_NUMBER - 1 - i));
     write(fd, &type, 1);
-   //printf("type: %d\n", type);
+    //if(instruction code == zjmp ou else, ecrire meme taille)
     for (int i = 0; i < MAX_ARGS_NUMBER && instruction_list->type[i]; i++) {
         switch (instruction_list->type[i]) {
-        case 1: write(fd, &instruction_list->args[i], 1);
-           //printf("arg: register 0x%d\n", *((char *)instruction_list->args[i]));
+        case 1:
+            write(fd,    &(  (char[4]) {instruction_list->args[i]}   )[3]    , 1);
+            //printf("arg: register 0x%d\n", *((char *)instruction_list->args[i]));
             break;
         case 2: //write(fd, "\0\0\0", 3);
-           //printf("arg: indirect 0x0 0x0 0x0 0x%x\n", *((int *)instruction_list->args[i]));
             write(fd, &instruction_list->args[i], 4);
+            //printf("arg: indirect 0x0 0x0 0x0 0x%x\n", *((int *)instruction_list->args[i]));
             break;
         case 3: //write(fd, "\0", 1);
-           //printf("arg: direct 0x0 0x%d\n", *((u_int16_t *)instruction_list->args[i]));
             write(fd, &instruction_list->args[i], 2);
+            //printf("arg: direct 0x0 0x%d\n", *((u_int16_t *)instruction_list->args[i]));
             break;
         default: break;
         }
     }
-    // /*DEBUG*/my_printf("\t%s", instruction_list->mnemonique);
-    // /*DEBUG*/my_printf("\t(\e[1m\e[32m0x0%x\e[0m)\n", instruction_list->code);
-    // my_printf("\tcycles: %d\n", instruction_list->nbr_cycles);
-    // my_printf("\tcomment: %s\n", instruction_list->comment);
-    // write(fd, instruction_list->type, MAX_ARGS_NUMBER);
-    // /*DEBUG*/my_printf("\targ types: \e[1m\e[32m", instruction_list->type);
-    // /*DEBUG*/for (int i = 0; i < 4; i++)
-    // /*DEBUG*/    my_printf("%d", instruction_list->type[i]);
-    // /*DEBUG*/my_printf("\e[0m\n");
 }
-
-// static void print_label(label_t *label_list, int fd)
-// {
-//     if (label_list == NULL)
-//         return;
-//     print_label(label_list->next_label, fd);
-//     print_op(label_list->instruction_list, fd);
-//     // /*DEBUG*/if (label_list->instruction_list != NULL)
-//     // /*DEBUG*/    my_printf("%s:\n", label_list->name);
-// }
-
-// static void print_header(header_t *header, int fd)
-// {
-//     // /*DEBUG*/my_printf("header: \n\t%x\n\t{%s}, {%s}\n\n", header->magic, header->prog_name, header->comment);
-// }
 
 void write_in_file(header_t *header, label_t *label_list,
     op_list_t *op_list, char *new_file)
@@ -81,6 +57,5 @@ void write_in_file(header_t *header, label_t *label_list,
     header->prog_size = offset_pos(0, GET);
     lseek(fd, 0, SEEK_SET);//GOBACK
     write(fd, header, sizeof(header_t));
-
     close(fd);
 }
