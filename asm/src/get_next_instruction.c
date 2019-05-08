@@ -9,6 +9,15 @@
 #include "my.h"
 #include "op.h"
 
+static char *clean_instruction(char *instruction)
+{
+    char *save = instruction;
+
+    instruction = my_strdup(&instruction[1]);
+    free(save);
+    return instruction;
+}
+
 char *get_next_instruction(int fd)
 {
     char *instruction = get_next_line(fd);
@@ -19,5 +28,7 @@ char *get_next_instruction(int fd)
         free(instruction);
         return get_next_instruction(fd);
     }
+    if (instruction[0] == '\t')
+        instruction = clean_instruction(instruction);
     return instruction;
 }
