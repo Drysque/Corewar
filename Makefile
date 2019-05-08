@@ -34,6 +34,7 @@ fclean:
 			$(MAKE) fclean -C $(LIBDIR)
 			$(MAKE) fclean -C $(COMPILERDIR)
 			$(MAKE) fclean -C $(VMDIR)
+			#find . \( -name '*~' -o -name '*.cor' \) -delete
 
 re: fclean all
 

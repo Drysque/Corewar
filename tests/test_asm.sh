@@ -22,8 +22,7 @@ function test {
         echo
         echo "Testing champion : " $file
         ./../asm/asm $file &> /dev/null
-        if [ $? -ne 0 ]
-        then
+        if [ $? -ne 0 ] ; then
             echo -ne "\t${RED}KO${NC}\n"
         else
             hexdump -C ${file%.*}.cor
@@ -37,11 +36,9 @@ function test {
 
 function display {
     result=$((($valid * 100)/($total)))
-    if [ $result -lt 25 ]
-    then
+    if [ $result -lt 25 ] ; then
         echo -ne "${RED}"
-    elif [ $result -ge 25 -a $result -le 75 ]
-    then
+    elif [ $result -ge 25 -a $result -le 75 ] ; then
         echo -ne "${ORANGE}"
     else
         echo -ne "${GREEN}"
@@ -53,14 +50,12 @@ function display {
 function read_logs {
     echo "Read the logs ? (y/n): "
     read res
-    if [[ $res == "y" ]]
-    then
+    if [[ $res == "y" ]] ; then
         cat .logs
-    else
-        rm -f logs
     fi
+    rm -f logs
 }
 
 test
 display
-read_logs
+# read_logs
