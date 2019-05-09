@@ -13,6 +13,7 @@ static int add_to_current_process(environment_t *env, char **argv,
 bool in_process)
 {
     bool created = false;
+    (void)argv;
 
     if (PROC_HEAD(env) == NULL) {
         PROC_HEAD(env) = malloc(sizeof(processes_t));
@@ -43,20 +44,20 @@ int *index, bool *in_process)
     if (argv[*index] == NULL)
         return (ERROR);
     if (my_strcmp(argv[*index], "-a")) {
-        if (argv[*index + 1] == NULL)
+        if (argv[*index + 1] == NULL || my_getnbr(argv[*index + 1]) <= 0)
             return (ERROR);
         PROC_TAIL(env)->address = my_getnbr(argv[*index + 1]);
         *index += 1;
         *in_process = true;
-        return (0);
+        return (PROC_TAIL(env)->address <= 0 ? ERROR : 0);
     }
     if (my_strcmp(argv[*index], "-n")) {
-        if (argv[*index + 1] == NULL)
+        if (argv[*index + 1] == NULL || my_getnbr(argv[*index + 1]) <= 0)
             return (ERROR);
         PROC_TAIL(env)->prog_number = my_getnbr(argv[*index + 1]);
         *index += 1;
         *in_process = true;
-        return (0);
+        return (PROC_TAIL(env)->prog_number <= 0 ? ERROR : 0);
     }
     if (my_strcmp(argv[*index - 1], "-dump"))
         return (ERROR);
@@ -77,6 +78,8 @@ environment_t *read_parameters(int argc, char **argv)
     if (index <= argc && new == NULL)
         return (NULL);
     if (my_strcmp(argv[index], "-dump") && index + 2 <= argc) {
+        if (my_getnbr(argv[index + 1]) <= 0)
+            return (NULL);
         new->nbr_cycle = my_getnbr(argv[index + 1]);
         index += 2;
     }
@@ -92,8 +95,9 @@ environment_t *read_parameters(int argc, char **argv)
         for (processes_t *tail = PROC_HEAD(new); tail != NULL; tail = tail->next) {
             printf("========================================================\n");
             printf("-n PROG_NBR: %d\n", tail->prog_number);
-            printf("-a PROG_ADDR: %d\n", tail->address);
+            printf("-a PROG_ADDR: %ld\n", tail->address);
             printf("PROG NAME: %s\n", tail->name);
         }
     }
+    return (new);
 }

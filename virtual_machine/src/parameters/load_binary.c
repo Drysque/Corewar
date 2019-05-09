@@ -17,8 +17,8 @@
 
 static int read_header(int fd)
 {
-    header_t header;
     op_t op;
+    header_t header;
     char coding_byte;
 
     if (read(fd, &header, sizeof(header_t)) == -1)

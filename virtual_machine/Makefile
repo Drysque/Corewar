@@ -15,35 +15,35 @@ RM			=	rm -f
 
 SRCDIR		=	./src
 
-SRC			=	$(SRCDIR)/main.c			\
-				$(SRCDIR)/parameters/get_parameters.c
+SRC			=	$(SRCDIR)/main.c							\
+				$(SRCDIR)/parameters/get_parameters.c		\
 
 OBJ			=	$(SRC:.c=.o)
 
-CPPFLAGS	=	-iquote ../include/
+CPPFLAGS	=	-iquote ../include/ -Wall -Wextra
 
 LDFLAGS		=	-L../lib/my
 
 LDLIBS		=	-lmy
 
-DEBUGFLAGS	=	-g3 -Wall -Wextra
+DEBUGFLAGS	=	-g3
 
 NAME		=	corewar
 
-all: $(NAME)
+all: 			$(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
+$(NAME): 		$(OBJ)
+				$(CC) -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 
 debug:
-	$(CC) -o $(NAME) $(SRC) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS) $(DEBUGFLAGS)
+				$(CC) -o $(NAME) $(SRC) $(CPPFLAGS) $(LDFLAGS) $(LDLIBS) $(DEBUGFLAGS)
 
 clean:
-	@$(RM) $(OBJ)
+				@$(RM) $(OBJ)
 
-fclean: clean
-	@$(RM) $(NAME)
+fclean: 		clean
+				@$(RM) $(NAME)
 
-re: fclean all
+re: 			fclean all
 
-.PHONY: debug clean fclean re all
+.PHONY:			debug clean fclean re all
