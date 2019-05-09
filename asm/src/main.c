@@ -47,11 +47,9 @@ int main(int ac, char const *av[])
     int fd = 0;
 
     check_args(ac, av);
-    name = check_file(av[1], &fd);//changes fd of file to read, return name to compile
+    name = check_file(av[1], &fd);
     if (name == NULL)
         return 84;
-    // /*DEBUG*/my_printf("file: {\e[1m\e[32m%s\e[0m}. fd: {\e[1m\e[32m%d\e[0m}. dest: {\e[1m\e[32m%s\e[0m}\n\n", av[1], fd, name);
-
     compile(fd, name);
 
     free(name);
