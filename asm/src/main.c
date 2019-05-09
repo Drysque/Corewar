@@ -66,7 +66,7 @@ bool add_name_or_comment(char *instruction, header_t *header)
         index += my_strlen(COMMENT_CMD_STRING);
         i = 1;
     } else
-            return false;
+        return false;
     for (; instruction[index] != '\0' &&
     (instruction[index] == ' ' || instruction[index] == '\t'); index += 1);
     if (instruction[index] == '\0')
@@ -152,7 +152,7 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
     for (int i = 0; op_tab[i].mnemonique != 0; i++) {
         if (my_strcmp(op_tab[i].mnemonique, instr_tab[0])) {
             new_op->code = op_tab[i].code;
-            if (i != 0 && i != )/
+            if (op_tab[i].code != 0x01 && op_tab[i].code != 0x09 && op_tab[i].code != 0x0c && op_tab[i].code != 0x0f)
                 offset_pos(1, ADD);
 
             if (my_tablen((char const **) &instr_tab[1]) != op_tab[i].nbr_args) {
@@ -222,9 +222,10 @@ static void print_op(op_list_t *instruction_list, int fd)
     printf("instruction code: %d\n", instruction_list->code);
     for (int i = 0; i < MAX_ARGS_NUMBER; i++)
         type |= instruction_list->type[i] << (2 * (MAX_ARGS_NUMBER - 1 - i));
-    //if (INSTRUCTION AVEC CODING BYTE);
+    printf("=> HEX %x\n", instruction_list->type[0]);
+    if (instruction_list->code != 0x01 && instruction_list->code != 0x0f && instruction_list->code != 0x0c && instruction_list->code != 0x09) {
         write(fd, &type, 1);
-    printf("type: %d\n", type);
+    }
     for (int i = 0; i < MAX_ARGS_NUMBER && instruction_list->type[i]; i++) {
         switch (instruction_list->true_type[i]) {
         case 1: swapped = instruction_list->args[i];
@@ -260,7 +261,7 @@ void write_in_file(header_t *header, label_t *label_list,
     //FINAL
     fill_needed_label(fd, label_list);
     header->magic = get_no_endian(COREWAR_EXEC_MAGIC, 4);
-    printf("%d\n", (int)offset_pos(0, GET));
+    printf("=========>> %d\n", (int)offset_pos(0, GET));
     header->prog_size = get_no_endian((int)offset_pos(0, GET), 4);
     lseek(fd, 0, SEEK_SET);
     write(fd, header, sizeof(header_t));
