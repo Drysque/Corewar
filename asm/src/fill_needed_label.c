@@ -26,8 +26,8 @@ void fill_needed_label(int fd, label_t *label_list)
     off_t offset = 0;
 
     while (list) {
-        // my_printf("{instruction at %d need %s} ", list->offset, list->label);
-        // my_printf("{%s is at %d}\n", list->label, fetch_offset(label_list, list->label));
+        my_printf("{instruction at %d need %s} ", list->offset, list->label);
+        my_printf("{%s is at %d}\n", list->label, fetch_offset(label_list, list->label));
         offset = fetch_offset(label_list, list->label);
         lseek(fd, list->offset, SEEK_SET);
         write(fd, &offset, sizeof(int));
