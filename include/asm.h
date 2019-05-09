@@ -24,6 +24,7 @@ typedef struct op_need_label_s {
     off_t offset;
     char *label;
     struct op_need_label_s *next_op;
+    int size;
 } op_need_label_t;
 
 typedef struct op_list_s {
@@ -40,7 +41,7 @@ typedef struct label_s {
     struct label_s *next_label;
 } label_t;
 
-op_need_label_t *add_need_label(char *name, int status);
+op_need_label_t *add_need_label(char *name, int status, int size);
 off_t offset_pos(ssize_t written, int status);
 
 char *get_next_instruction(int fd);

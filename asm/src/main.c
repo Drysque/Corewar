@@ -46,7 +46,7 @@ static void add_label(char *label_name, label_t **label_list)
     label_t *new_label = my_calloc(sizeof(label_t));
 
     new_label->name = label_name;
-    // new_label->offset = offset_pos(0, GET);
+    new_label->offset = offset_pos(0, GET);
     new_label->next_label = *label_list;
     *label_list = new_label;
 }
@@ -102,7 +102,7 @@ void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
                     offset_pos(4, ADD);
                 }
             if (instr_tab[i][1] == LABEL_CHAR) {
-                add_need_label(&instr_tab[i][2], ADD);
+                add_need_label(&instr_tab[i][2], ADD, op->true_type[i]);
             } else
                 op->args[i] = my_getnbr(&instr_tab[i][1]);
             // my_printf("0x00 0x00 0x00 0x%x ", my_getnbr(&instr_tab[i][1]));
@@ -155,9 +155,9 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
             if (op_tab[i].code != 0x01 && op_tab[i].code != 0x09 && op_tab[i].code != 0x0c && op_tab[i].code != 0x0f)
                 offset_pos(1, ADD);
 
-            if (my_tablen((char const **) &instr_tab[1]) != op_tab[i].nbr_args) {
+            if (my_tablen((char const **)&instr_tab[1]) != op_tab[i].nbr_args) {
                 my_printf("wrong number of arguments for instruction %s (%d)\n",
-                    instr_tab[0], my_tablen((char const **) &instr_tab[1]));
+                    instr_tab[0], my_tablen((char const **)&instr_tab[1]));
                 exit(84);
             }
             get_args_type(new_op, &instr_tab[1]);
@@ -190,20 +190,17 @@ void parse_instruction(char *instruction, label_t **label_list,
     }
 }
 
-static int get_no_endian(int nb, int size)
+int get_no_endian(int nb, int size)
 {
     // printf("DEBUG in: %x\n", nb);
     // printf("DEBUG out: %x\n", bytes[3] | bytes[2] | bytes[1] | bytes[0]);
     int bytes[] = {(nb & 0xff) << 24, (nb & 0xff00) << 8, (nb & 0xff0000) >> 8, (nb & 0xff000000) >> 24};
     int x = ((nb & 0xff) << 8 | (nb & 0xff00) >> 8);
 
-    printf("BEFORE SWITCH: %x\n", nb);
     switch (size) {
         case 2:
-            printf("AFTER 2: %x\n", x);
             return x;
         case 4:
-            printf("AFTER 4: %x\n", (bytes[3] | bytes[2] | bytes[1] | bytes[0]));
             return (bytes[3] | bytes[2] | bytes[1] | bytes[0]);
         default: return (nb);
     }
@@ -219,10 +216,8 @@ static void print_op(op_list_t *instruction_list, int fd)
         return;
     print_op(instruction_list->next_op, fd);
     write(fd, &instruction_list->code, sizeof(char));
-    printf("instruction code: %d\n", instruction_list->code);
     for (int i = 0; i < MAX_ARGS_NUMBER; i++)
         type |= instruction_list->type[i] << (2 * (MAX_ARGS_NUMBER - 1 - i));
-    printf("=> HEX %x\n", instruction_list->type[0]);
     if (instruction_list->code != 0x01 && instruction_list->code != 0x0f && instruction_list->code != 0x0c && instruction_list->code != 0x09) {
         write(fd, &type, 1);
     }
