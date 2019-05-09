@@ -7,6 +7,9 @@
 
 #include "op.h"
 
+static const int no_coding_byte[] = {0x01, 0x09, 0x0c, 0x0f};
+// static const int no_coding_byte = 0x01 | 0x09 | 0x0c| 0x0f;
+
 op_t op_tab[] = {
     {"live", 1, {T_DIR}, 1, 10,
             "alive"},
