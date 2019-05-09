@@ -31,4 +31,5 @@ typedef struct environment_s {
 static const int ERROR = 84;
 
 environment_t *read_parameters(int argc, char **argv);
+
 #endif /* !VM_H_ */
