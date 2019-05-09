@@ -25,6 +25,7 @@ static void check_args(int ac, char const *av[])
 static char *check_file(char const *file, int *fd)
 {
     char *dup;
+    char *dup_cor;
 
     *fd = open(file, O_RDONLY);
     if (*fd < 0) {
@@ -35,17 +36,9 @@ static char *check_file(char const *file, int *fd)
     for (size_t i = my_strlen(dup) - 1; i > 0; i--)
         if (dup[i] == '.')
             dup[i] = '\0';
-    return dup;
-}
-
-void compile(int fd)
-{
-    char *str;
-
-    while ((str = get_next_instruction(fd)) != NULL) {
-        my_printf("instruction found: {\e[1m\e[34m%s\e[0m}\n", str);/*DEBUG*/
-        free(str);
-    }
+    dup_cor = my_strcat(dup, ".cor");
+    free(dup);
+    return dup_cor;
 }
 
 int main(int ac, char const *av[])
@@ -57,10 +50,9 @@ int main(int ac, char const *av[])
     name = check_file(av[1], &fd);//changes fd of file to read, return name to compile
     if (name == NULL)
         return 84;
-    my_printf("file: {\e[1m\e[32m%s\e[0m}. fd: {\e[1m\e[32m%d\e[0m}. dest: {\e[1m\e[32m%s.cor\e[0m}\n", av[1], fd, name);/*DEBUG*/
+    // /*DEBUG*/my_printf("file: {\e[1m\e[32m%s\e[0m}. fd: {\e[1m\e[32m%d\e[0m}. dest: {\e[1m\e[32m%s\e[0m}\n\n", av[1], fd, name);
 
-    //linter(fd); + lseek /*avec get_next_instruction*/
-    compile(fd);
+    compile(fd, name);
 
     free(name);
     close(fd);

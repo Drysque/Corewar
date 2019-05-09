@@ -11,7 +11,7 @@
 int my_strlen(char const *str);
 char *my_strcat(char *buffer, char *str);
 
-static const int READ_SIZE = 50;
+static const int READ_SIZE = 100;
 
 static int eol_index(char *str)
 {
@@ -45,7 +45,7 @@ char *get_next_line(int fd)
         }
         else {
             if (!(readstr = malloc(sizeof(char) * READ_SIZE + 1)) || fd < 0
-                || READ_SIZE <= 0 || (rd = read(fd, readstr, READ_SIZE)) < 1)
+                || (rd = read(fd, readstr, READ_SIZE)) < 1)
                 return NULL;
             readstr[rd] = 0;
             buffer = my_strcat(buffer, readstr);

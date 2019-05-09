@@ -1,15 +1,15 @@
 /*
 ** EPITECH PROJECT, 2018
-** my_strcpy
+** my_strncpy
 ** File description:
-** Day06 task01 my_strcpy
+** my_strncpy
 */
 
-char *my_strcpy(char *dest, char const *src)
+char *my_strncpy(char *dest, char const *src, int n)
 {
     int i = 0;
 
-    for (; src[i] != '\0'; i++)
+    for (; src[i] != '\0' || i > n; i++)
         dest[i] = src[i];
     dest[i] = '\0';
     return (dest);

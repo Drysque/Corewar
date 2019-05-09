@@ -9,9 +9,9 @@ SHELL		=	sh
 
 MAKE		=	make
 
-COMPILERDIR	=	./compiler
+COMPILERDIR	=	./asm
 
-VMDIR		=	./virtual_machine
+VMDIR		=	./corewar
 
 LIBDIR		=	./lib/my
 
@@ -34,6 +34,7 @@ fclean:
 			$(MAKE) fclean -C $(LIBDIR)
 			$(MAKE) fclean -C $(COMPILERDIR)
 			$(MAKE) fclean -C $(VMDIR)
+			#find . \( -name '*~' -o -name '*.cor' \) -delete
 
 re: fclean all
 
