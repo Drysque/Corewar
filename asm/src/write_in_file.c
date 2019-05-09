@@ -21,7 +21,7 @@ static void print_op(op_list_t *instruction_list, int fd)
     write(fd, &type, 1);
     //if(instruction code == zjmp ou else, ecrire meme taille)offset_pos(3, SUB);
     for (int i = 0; i < MAX_ARGS_NUMBER && instruction_list->type[i]; i++) {
-        switch (instruction_list->type[i]) {
+        switch (instruction_list->true_type[i]) {
         case 1:
             write(fd, &instruction_list->args[i], 1);
             //printf("arg: register 0x%d\n", *((char *)instruction_list->args[i]));

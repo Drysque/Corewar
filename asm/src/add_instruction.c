@@ -8,28 +8,30 @@
 #include "asm.h"
 #include "my.h"
 
-void get_args_type(char *type, int *args, char **instr_tab)
+void get_args_type(op_list_t *op, char **instr_tab)
 {
     for (int i = 0; instr_tab[i]; i++) {
         if (instr_tab[i][0] == 'r') {
-            type[i] = 0b01;
-            args[i] = my_str_to_char(&instr_tab[i][1]);
+            op->type[i] = 0b01;
+            op->true_type[i] = 0b01;
+            op->args[i] = my_getnbr(&instr_tab[i][1]);
             offset_pos(1, ADD);
             // my_printf("0x%x ", my_getnbr(&instr_tab[i][1]));
         }
         else if (instr_tab[i][0] == '%') {
-            type[i] = 0b10;
-            offset_pos(4, ADD);
+            op->type[i] = 0b10;
+            op->true_type[i] = (op->code == 0x09 || op->code == 0x0b ? 0b11 : 0b10);
+            offset_pos(4 - (op->code == 0x09 || op->code == 0x0b ? 2 : 0), ADD);
             if (instr_tab[i][1] == LABEL_CHAR) {
                 add_need_label(&instr_tab[i][2], ADD);
-            } else {
-                args[i] = my_getnbr(&instr_tab[i][1]);
-            }
+            } else
+                op->args[i] = my_getnbr(&instr_tab[i][1]);
             // my_printf("0x00 0x00 0x00 0x%x ", my_getnbr(&instr_tab[i][1]));
         }
         else {
-            type[i] = 0b11;
-            args[i] = my_str_to_int16(instr_tab[i]);
+            op->type[i] = 0b11;
+            op->true_type[i] = 0b11;
+            op->args[i] = my_getnbr(instr_tab[i]);
             offset_pos(2, ADD);
             // my_printf("0x00 0x%x ", my_getnbr(instr_tab[i]));
         }
@@ -65,7 +67,7 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
                     instr_tab[0], my_tablen((char const **) &instr_tab[1]));
                 exit(84);
             }
-            get_args_type(new_op->type, new_op->args, &instr_tab[1]);
+            get_args_type(new_op, &instr_tab[1]);
             new_op->next_op = *op_list;
             *op_list = new_op;
             return;
