@@ -65,7 +65,6 @@ typedef struct op_s     op_t;
 ** op_tab from op.c
 */
 extern  op_t    op_tab[];
-
 /*
 ** header
 */

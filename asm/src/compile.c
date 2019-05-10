@@ -8,75 +8,36 @@
 #include "asm.h"
 #include "my.h"
 
+static const char NO_CODING_BYTE[] = {0x01, 0x09, 0x0c, 0x0f, 0x0};
+static const char NO_DIRECT_SIZE[] = {0x01, 0x09, 0x0b, 0x0c, 0x0};
 
-static void add_label(char *label_name, label_t **label_list)
+static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
 {
-    label_t *new_label = my_calloc(sizeof(label_t));
-
-    new_label->name = label_name;
-    new_label->offset = offset_pos(0, GET);
-    new_label->next_label = *label_list;
-    *label_list = new_label;
-}
-
-bool add_name_or_comment(char *instruction, header_t *header)
-{
-    int index = 0;
-    int i = 0;
-
-    for (; instruction[index] != '\0' && (instruction[index] == ' ' || instruction[index] == '\t'); index += 1);
-    if (instruction[index] == '\0')
-        return false;
-    if (my_strncmp(&instruction[index], NAME_CMD_STRING, my_strlen(NAME_CMD_STRING)))
-        index += my_strlen(NAME_CMD_STRING);
-    else if (my_strncmp(&instruction[index], COMMENT_CMD_STRING, my_strlen(COMMENT_CMD_STRING))) {
-        index += my_strlen(COMMENT_CMD_STRING);
-        i = 1;
-    } else
-        return false;
-    for (; instruction[index] != '\0' &&
-    (instruction[index] == ' ' || instruction[index] == '\t'); index += 1);
-    if (instruction[index] == '\0')
-        return false;
-    if (instruction[index] == '\"') {
-        index += 1;
-        for (int len = my_strlen(instruction) - 1; len > 0; len--)
-            if (instruction[len] == '\"') {
-                instruction[len] = 0;
-                break;
-            }
-    }
-    if (i == 0)
-        my_strcpy(header->prog_name, &instruction[index]);
-    else
-        my_strcpy(header->comment, &instruction[index]);
-    return true;
-}
-
-void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
-{
-    char code_tab[2] = {11, 9};
-
     if (instr_tab[i][0] == '%') {
         op->type[i] = 0b10;
-        for (int j = 0; j < 2; j += 1)
-            if (op->code == code_tab[j]) {
+        for (int j = 0; NO_DIRECT_SIZE[j]; j++) {
+            // printf("%x == %x ?\n", op->code, NO_DIRECT_SIZE[j]);
+            if (op->code == NO_DIRECT_SIZE[j]) {
                 op->true_type[i] = 0b11;
-                offset_pos(2, ADD);
-            } else if (j + 1 == 2) {
+                break;
+            } else if (!NO_DIRECT_SIZE[j + 1])
                 op->true_type[i] = 0b10;
-                offset_pos(4, ADD);
-            }
+        }
         if (instr_tab[i][1] == LABEL_CHAR) {
-            add_need_label(&instr_tab[i][2], ADD, op->true_type[i]);
-        } else
+            add_need_label(&instr_tab[i][2], ADD, op->true_type[i], op->begin_offset);
+            printf("direct label (%s) will take %d bytes\n", &instr_tab[i][2], op->true_type[i] == 2 ? 4 : 2);
+        } else {
             op->args[i] = my_getnbr(&instr_tab[i][1]);
+            printf("direct %d will take %d bytes\n",op->args[i], op->true_type[i] == 2 ? 4 : 2);
+        }
+        offset_pos(op->true_type[i] == 2 ? 4 : 2, ADD);
     }
     else {
         op->type[i] = 0b11;
         op->true_type[i] = 0b11;
         op->args[i] = my_getnbr(instr_tab[i]);
         offset_pos(2, ADD);
+        printf("indirect %d will take 2 bytes\n", op->args[i]);
     }
 }
 
@@ -88,6 +49,7 @@ void get_args_type(op_list_t *op, char **instr_tab)
             op->true_type[i] = 0b01;
             op->args[i] = my_getnbr(&instr_tab[i][1]);
             offset_pos(1, ADD);
+            printf("register %d will take 1 byte\n", op->args[i]);
         } else
            get_direct_indirect(op, instr_tab, i);
     }
@@ -110,11 +72,14 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
 
     if (instr_tab[0] == NULL)
         return;
+    //SET PONT D4E TP INTSRUCTION
     new_op = my_calloc(sizeof(op_list_t));
+    new_op->begin_offset = offset_pos(0, GET);
     clean_arguments(&instr_tab[1]);
     for (int i = 0; op_tab[i].mnemonique != 0; i++) {
         if (my_strcmp(op_tab[i].mnemonique, instr_tab[0])) {
             new_op->code = op_tab[i].code;
+            offset_pos(1, ADD);
             if (op_tab[i].code != 0x01 && op_tab[i].code != 0x09 && op_tab[i].code != 0x0c && op_tab[i].code != 0x0f)
                 offset_pos(1, ADD);
             if (my_tablen((char const **)&instr_tab[1]) != op_tab[i].nbr_args) {
@@ -130,6 +95,17 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
     }
     my_printf("unknown instruction %s\n", instr_tab[0]);
     exit(84);
+}
+
+static void add_label(char *label_name, label_t **label_list)
+{
+    label_t *new_label = my_calloc(sizeof(label_t));
+
+    new_label->name = label_name;
+    new_label->offset = offset_pos(0, GET);
+    printf("LABEL %s: %d\n", new_label->name, new_label->offset);
+    new_label->next_label = *label_list;
+    *label_list = new_label;
 }
 
 void parse_instruction(char *instruction, label_t **label_list,
@@ -159,23 +135,29 @@ static void print_op(op_list_t *instruction_list, int fd)
     if (instruction_list == NULL)
         return;
     print_op(instruction_list->next_op, fd);
+    printf("wrote instruction %x at %d of size 1\n", instruction_list->code, lseek(fd, 0, SEEK_CUR));
     write(fd, &instruction_list->code, sizeof(char));
     for (int i = 0; i < MAX_ARGS_NUMBER; i++)
         type |= instruction_list->type[i] << (2 * (MAX_ARGS_NUMBER - 1 - i));
-    if (instruction_list->code != 0x01 && instruction_list->code != 0x0f && instruction_list->code != 0x0c && instruction_list->code != 0x09)
+    if (instruction_list->code != 0x01 && instruction_list->code != 0x0f && instruction_list->code != 0x0c && instruction_list->code != 0x09) {
+        printf("wrote type %x at %d of size 1\n", type, lseek(fd, 0, SEEK_CUR));
         write(fd, &type, 1);
+    }
     for (int i = 0; i < MAX_ARGS_NUMBER && instruction_list->type[i]; i++) {
         switch (instruction_list->true_type[i]) {
         case 1: swapped = instruction_list->args[i];
-            printf("1 byte: not swapped: %x\n", swapped);
+            // printf("1 byte: not swapped: %x\n", swapped);
+            printf("(1) wrote at %d of size %d\n", lseek(fd, 0, SEEK_CUR), 1);
             write(fd, &swapped, 1);
             break;
         case 2: swapped = get_no_endian(instruction_list->args[i], 4);
-            printf("4 bytes: swapped: %x\n", swapped);
+            // printf("4 bytes: swapped: %x\n", swapped);
+            printf("(2) wrote at %d of size %d\n", lseek(fd, 0, SEEK_CUR), 4);
             write(fd, &swapped, 4);
             break;
         case 3: swapped = get_no_endian(instruction_list->args[i], 2);
-            printf("2 bytes: swapped: %x\n", swapped);
+            // printf("2 bytes: swapped: %x\n", swapped);
+            printf("(3) wrote at %d of size %d\n", lseek(fd, 0, SEEK_CUR), 2);
             write(fd, &swapped, 2);
             break;
         default: break;
