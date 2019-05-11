@@ -9,7 +9,7 @@
 #include <stdbool.h>
 char *my_strndup(char const *src, int n);
 
-static bool is_one_of_them(char c, char *str)
+bool is_one_of_them(char c, char const *str)
 {
     for (int i = 0; str[i]; i++)
         if (c == str[i])
