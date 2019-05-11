@@ -11,33 +11,33 @@
 bool add_name_or_comment(char *instruction, header_t *header)
 {
     int index = 0;
-    int i = 0;
+    bool name = false;
 
-    for (; instruction[index] != '\0' && (instruction[index] == ' ' || instruction[index] == '\t'); index += 1);
+    for (; instruction[index] != '\0' && is_one_of_them(instruction[index], " \t"); index++);
     if (instruction[index] == '\0')
         return false;
-    if (my_strncmp(&instruction[index], NAME_CMD_STRING, my_strlen(NAME_CMD_STRING)))
+    if (my_strncmp(&instruction[index], NAME_CMD_STRING, my_strlen(NAME_CMD_STRING))) {
         index += my_strlen(NAME_CMD_STRING);
-    else if (my_strncmp(&instruction[index], COMMENT_CMD_STRING, my_strlen(COMMENT_CMD_STRING))) {
+        name = true;
+    } else if (my_strncmp(&instruction[index], COMMENT_CMD_STRING, my_strlen(COMMENT_CMD_STRING)))
         index += my_strlen(COMMENT_CMD_STRING);
-        i = 1;
-    } else
+    else
         return false;
-    for (; instruction[index] != '\0' &&
-    (instruction[index] == ' ' || instruction[index] == '\t'); index += 1);
+    for (; instruction[index] && is_one_of_them(instruction[index], " \t") ; index++);
     if (instruction[index] == '\0')
         return false;
     if (instruction[index] == '\"') {
-        index += 1;
+        index++;
         for (int len = my_strlen(instruction) - 1; len > 0; len--)
             if (instruction[len] == '\"') {
                 instruction[len] = 0;
                 break;
             }
     }
-    if (i == 0)
+    if (name)
         my_strcpy(header->prog_name, &instruction[index]);
     else
         my_strcpy(header->comment, &instruction[index]);
+    // my_strcpy(name ? header->prog_name : header->comment, &instruction[index]);
     return true;
 }

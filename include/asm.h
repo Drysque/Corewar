@@ -26,8 +26,8 @@ typedef struct op_need_label_s {
     off_t offset;
     char *label;
     off_t begin_offset;
-    struct op_need_label_s *next_op;
     int size;
+    struct op_need_label_s *next_op;
 } op_need_label_t;
 
 typedef struct op_list_s {
