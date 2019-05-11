@@ -8,36 +8,38 @@
 #include "asm.h"
 #include "my.h"
 
-bool add_name_or_comment(char *instruction, header_t *header)
+static void remove_quotes(char *instruct, int *index)
 {
-    int index = 0;
-    bool name = false;
-
-    for (; instruction[index] != '\0' && is_one_of_them(instruction[index], " \t"); index++);
-    if (instruction[index] == '\0')
-        return false;
-    if (my_strncmp(&instruction[index], NAME_CMD_STRING, my_strlen(NAME_CMD_STRING))) {
-        index += my_strlen(NAME_CMD_STRING);
-        name = true;
-    } else if (my_strncmp(&instruction[index], COMMENT_CMD_STRING, my_strlen(COMMENT_CMD_STRING)))
-        index += my_strlen(COMMENT_CMD_STRING);
-    else
-        return false;
-    for (; instruction[index] && is_one_of_them(instruction[index], " \t") ; index++);
-    if (instruction[index] == '\0')
-        return false;
-    if (instruction[index] == '\"') {
-        index++;
-        for (int len = my_strlen(instruction) - 1; len > 0; len--)
-            if (instruction[len] == '\"') {
-                instruction[len] = 0;
+    if (instruct[*index] == '\"') {
+        (*index)++;
+        for (int len = my_strlen(instruct) - 1; len > 0; len--)
+            if (instruct[len] == '\"') {
+                instruct[len] = 0;
                 break;
             }
     }
-    if (name)
-        my_strcpy(header->prog_name, &instruction[index]);
+}
+
+bool add_name_or_comment(char *instruct, header_t *header)
+{
+    int index = 0;
+    bool name = false;
+    int len[2] = {my_strlen(NAME_CMD_STRING), my_strlen(COMMENT_CMD_STRING)};
+
+    for (; instruct[index] && is_one_of_them(instruct[index], " \t"); index++);
+    if (instruct[index] == '\0')
+        return false;
+    if (my_strncmp(&instruct[index], NAME_CMD_STRING, len[0])) {
+        index += len[0];
+        name = true;
+    } else if (my_strncmp(&instruct[index], COMMENT_CMD_STRING, len[1]))
+        index += len[1];
     else
-        my_strcpy(header->comment, &instruction[index]);
-    // my_strcpy(name ? header->prog_name : header->comment, &instruction[index]);
+        return false;
+    for (; instruct[index] && is_one_of_them(instruct[index], " \t"); index++);
+    if (instruct[index] == '\0')
+        return false;
+    remove_quotes(instruct, &index);
+    my_strcpy(name ? header->prog_name : header->comment, &instruct[index]);
     return true;
 }

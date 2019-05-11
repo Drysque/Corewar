@@ -15,11 +15,7 @@ static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
 {
     if (instr_tab[i][0] == '%') {
         op->type[i] = 0b10;
-        if (is_one_of_them(op->code, NO_DIRECT_SIZE))
-            op->true_type[i] = 0b11;
-        else
-            op->true_type[i] = 0b10;
-        // op->true_type[i] = is_one_of_them(op->code, NO_DIRECT_SIZE) ? 0b11 : 0b10;
+        op->true_type[i] = is_one_of_them(op->code, NO_DIRECT_SIZE) ? 0b11 : 0b10;
         if (instr_tab[i][1] == LABEL_CHAR)
             add_need_label(&instr_tab[i][2], ADD, op->true_type[i], op->begin_offset);
         else
@@ -35,7 +31,7 @@ static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
     }
 }
 
-void get_args_type(op_list_t *op, char **instr_tab)
+static void get_args_type(op_list_t *op, char **instr_tab)
 {
     for (int i = 0; instr_tab[i]; i++) {
         if (instr_tab[i][0] == 'r') {
@@ -59,6 +55,20 @@ static void clean_arguments(char **instr_tab)
     }
 }
 
+static void fill_op(op_list_t *new_op, char **instr_tab, op_t *op)
+{
+    new_op->code = op->code;
+    offset_pos(1, ADD);
+    if (is_one_of_them(op->code, NO_CODING_BYTE) == false)
+        offset_pos(1, ADD);
+    if (my_tablen((char const **)&instr_tab[1]) != op->nbr_args) {
+        my_printf("wrong number of arguments for instruction %s (%d)\n",
+            instr_tab[0], my_tablen((char const **)&instr_tab[1]));
+        exit(84);
+    }
+    get_args_type(new_op, &instr_tab[1]);
+}
+
 void add_instruction(char **instr_tab, op_list_t **op_list)
 {
     op_list_t *new_op;
@@ -70,19 +80,10 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
     clean_arguments(&instr_tab[1]);
     for (int i = 0; op_tab[i].mnemonique != 0; i++) {
         if (my_strcmp(op_tab[i].mnemonique, instr_tab[0])) {
-            new_op->code = op_tab[i].code;
-            offset_pos(1, ADD);
-            if (is_one_of_them(op_tab[i].code, NO_CODING_BYTE) == false)
-                offset_pos(1, ADD);
-            if (my_tablen((char const **)&instr_tab[1]) != op_tab[i].nbr_args) {
-                my_printf("wrong number of arguments for instruction %s (%d)\n",
-                    instr_tab[0], my_tablen((char const **)&instr_tab[1]));
-                exit(84);
-            }
-            get_args_type(new_op, &instr_tab[1]);
+            fill_op(new_op, instr_tab, &op_tab[i]);
             new_op->next_op = *op_list;
             *op_list = new_op;
-            printf("total bytes theorically written: \e[1m\e[32m%d\e[0m (%d)\n", offset_pos(0, GET) + sizeof(header_t), offset_pos(0, GET));
+            // printf("total bytes theorically written: \e[1m\e[32m%d\e[0m (%d)\n", offset_pos(0, GET) + sizeof(header_t), offset_pos(0, GET));
             return;
         }
     }

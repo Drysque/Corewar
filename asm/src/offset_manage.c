@@ -14,7 +14,7 @@ off_t offset_pos(ssize_t written, int status)
 
     if (status == ADD) {
         offset += written;
-        printf("added: \e[1m\e[33m%d\e[0m (%d)\n", written, offset);
+        // printf("added: \e[1m\e[33m%d\e[0m (%d)\n", written, offset);
     }
     if (status == SUB)
         offset -= written;

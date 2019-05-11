@@ -15,12 +15,12 @@ void compile(int fd, char *new_file)
     label_t *label_list = NULL;
     op_list_t *op_list = NULL;
 
-    printf("\ntotal bytes theorically written: \e[1m\e[32m%d\e[0m (%d)\n", offset_pos(0, GET) + sizeof(header_t), offset_pos(0, GET));
+    // printf("\ntotal bytes theorically written: \e[1m\e[32m%d\e[0m (%d)\n", offset_pos(0, GET) + sizeof(header_t), offset_pos(0, GET));
     while ((str = get_next_instruction(fd)) != NULL) {
-        printf("\ninstruction found: {\e[1m\e[34m%s\e[0m}\n", str);
+        // printf("\ninstruction found: {\e[1m\e[34m%s\e[0m}\n", str);
         parse_instruction(str, &label_list, &op_list, header);
         free(str);
     }
-    printf("\n------------BEGINNING WRITING-----------\n\n");
+    // printf("\n------------BEGINNING WRITING-----------\n\n");
     write_in_file(header, label_list, op_list, new_file);
 }

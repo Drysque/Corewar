@@ -51,9 +51,7 @@ int main(int ac, char const *av[])
     if (name == NULL)
         return 84;
     compile(fd, name);
-
     free(name);
     close(fd);
-
     return 0;
 }
