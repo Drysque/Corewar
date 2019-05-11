@@ -8,6 +8,8 @@
 #include "my.h"
 #include "asm.h"
 
+static const char SEPAR_STR[] = {SEPARATOR_CHAR, ' ', '\t'};
+
 static void add_label(char *label_name, label_t **label_list)
 {
     label_t *new_label = my_calloc(sizeof(label_t));
@@ -30,7 +32,7 @@ static char *clean_instruction(char *instruction)
 void parse_instruction(char *instruction, label_t **label_list,
     op_list_t **op_list, header_t *header)
 {
-    char **tab = my_str_delim_array(clean_instruction(instruction), ", \t");
+    char **tab = my_str_delim_array(clean_instruction(instruction), SEPAR_STR);
     int len = my_strlen(tab[0]);
 
     if (tab == NULL || len == 0)

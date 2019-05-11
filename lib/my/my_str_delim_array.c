@@ -17,7 +17,7 @@ bool is_one_of_them(char c, char const *str)
     return false;
 }
 
-int delim_count(char const *str, char *delims)
+static int delim_count(char const *str, char const *delims)
 {
     int count = 0;
 
@@ -28,7 +28,7 @@ int delim_count(char const *str, char *delims)
     return (count);
 }
 
-char **my_str_delim_array(char const *str, char *delims)
+char **my_str_delim_array(char const *str, char const *delims)
 {
     int count = delim_count(str, delims);
     char **array = malloc(sizeof(char *) * (count + 1));

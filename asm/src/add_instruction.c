@@ -13,7 +13,7 @@ static const char NO_DIRECT_SIZE[] = {0x05, 0x09, 0x0b, 0x0c, 0x0};
 
 static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
 {
-    if (instr_tab[i][0] == '%') {
+    if (instr_tab[i][0] == DIRECT_CHAR) {
         op->type[i] = 0b10;
         op->true_type[i] = is_one_of_them(op->code,NO_DIRECT_SIZE)
             ? 0b11 : 0b10;
@@ -23,8 +23,7 @@ static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
         else
             op->args[i] = my_getnbr(&instr_tab[i][1]);
         offset_pos(op->true_type[i] == 0b10 ? DIR_SIZE : IND_SIZE, ADD); // printf("added offset of %d for dir/indir\n", op->true_type[i] == 2 ? 4 : 2);
-    }
-    else {
+    } else {
         op->type[i] = 0b11;
         op->true_type[i] = 0b11;
         op->args[i] = my_getnbr(instr_tab[i]);
@@ -43,17 +42,6 @@ static void get_args_type(op_list_t *op, char **instr_tab)
             offset_pos(1, ADD);// printf("added offset of 1 for register\n");
         } else
            get_direct_indirect(op, instr_tab, i);
-    }
-}
-
-static void clean_arguments(char **instr_tab)
-{
-    int len;
-
-    for (int i = 0; instr_tab && instr_tab[i]; i++) {
-        len = my_strlen(instr_tab[i]) - 1;
-        if (instr_tab[i][len] == SEPARATOR_CHAR)
-            instr_tab[i][len] = '\0';
     }
 }
 
@@ -79,7 +67,6 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
         return;
     new_op = my_calloc(sizeof(op_list_t));
     new_op->begin_offset = offset_pos(0, GET);
-    clean_arguments(&instr_tab[1]);
     for (int i = 0; op_tab[i].mnemonique != 0; i++) {
         if (my_strcmp(op_tab[i].mnemonique, instr_tab[0])) {
             fill_op(new_op, instr_tab, &op_tab[i]);

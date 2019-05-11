@@ -36,6 +36,6 @@ int my_strcmp_diff(char const *s1, char const *s2);
 void *my_calloc(size_t size);
 
 char *get_next_line(int fd);
-char **my_str_delim_array(char const *str, char *delims);
+char **my_str_delim_array(char const *str, char const *delims);
 
 #endif /* MY_H_ */

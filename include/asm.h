@@ -14,8 +14,6 @@
 #include <stdbool.h>
 #include "op.h"
 
-/* TO REMOVE */ #include <stdio.h> //TO REMOVE
-
 enum {
     GET,
     ADD,
