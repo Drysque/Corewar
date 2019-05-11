@@ -43,6 +43,11 @@ static void get_args_type(op_list_t *op, char **instr_tab)
             op->true_type[i] = 0b01;
             op->args[i] = my_getnbr(&instr_tab[i][1]);
             offset_pos(1, ADD);// printf("added offset of 1 for register\n");
+            if (op->args[i] <= 0 || op->args[i] > REG_NUMBER) {
+                my_printf("\n\t\e[1m\e[31mInvalid register number:\e[0m "
+                "\e[5m%d\e[0m is negative or too high\n\n", op->args[i]);
+                exit(84);
+            }
         } else
            get_direct_indirect(op, instr_tab, i);
     }

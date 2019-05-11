@@ -9,7 +9,7 @@
 #include "my.h"
 
 static const char *errors_name[] = {
-    "\n\t\e[1m\e[31mNo name is specified\e[0m\e[0m\n\n",
+    "\n\t\e[1m\e[31mNo name is specified\e[0m\n\n",
     "\n\t\e[1m\e[31mThe name must be the first line of the program\e[0m\n\n"};
 static const char *errors_comment[] = {
     "\n\t\e[1m\e[31mNo comment is specified\e[0m\n\n",
@@ -24,10 +24,12 @@ static void remove_quotes(char *str)
                 return;
             }
     } else {
-        my_printf("\n\t\e[1m\e[31msyntax error:\e[0m expected opening '\e[5m\"\e[0m'\n\n");
+        my_printf("\n\t\e[1m\e[31msyntax error:\e[0m expected opening "
+            "'\e[5m%c\e[0m'\n\n", '\"');
         exit(84);
     }
-    my_printf("\n\t\e[1m\e[31msyntax error:\e[0m expected closing '\e[5m\"\e[0m'\n\n");
+    my_printf("\n\t\e[1m\e[31msyntax error:\e[0m expected closing "
+        "'\e[5m%c\e[0m'\n\n", '\"');
     exit(84);
 }
 
