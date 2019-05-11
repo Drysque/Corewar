@@ -22,15 +22,22 @@ function test {
         echo
         echo "Testing champion : " $file
         ./../asm/asm $file &> /dev/null
+        cat ${file%.*}.cor > .tmp
+        ./../asm/corewar_binaries/asm/asm $file &> /dev/null
+        diff .tmp ${file%.*}.cor
         if [ $? -ne 0 ] ; then
             echo -ne "\t${RED}KO${NC}\n"
-        else
+            echo "YOU:"
+            hexdump -C .tmp
+            echo "MOULI:"
             hexdump -C ${file%.*}.cor
+        else
             echo -ne "\t${GREEN}OK${NC}\n"
             valid=$(($valid+1))
         fi
         total=$(($total+1))
         kill $timeout_pid
+        rm -f .tmp ${file%.*}.cor
     done
 }
 
