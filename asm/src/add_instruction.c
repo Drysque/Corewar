@@ -9,13 +9,13 @@
 #include "my.h"
 
 static const char NO_CODING_BYTE[] = {0x01, 0x09, 0x0c, 0x0f, 0x0};
-static const char NO_DIRECT_SIZE[] = {0x05, 0x09, 0x0b, 0x0c, 0x0};
+static const char NO_DIRECT_SIZE[] = {0x05, 0x09, 0x0a, 0x0b, 0x0c, 0x0f, 0x0};
 
 static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
 {
     if (instr_tab[i][0] == DIRECT_CHAR) {
         op->type[i] = 0b10;
-        op->true_type[i] = is_one_of_them(op->code,NO_DIRECT_SIZE)
+        op->true_type[i] = is_one_of_them(op->code, NO_DIRECT_SIZE)
             ? 0b11 : 0b10;
         if (instr_tab[i][1] == LABEL_CHAR)
             add_need_label(&instr_tab[i][2], ADD,
@@ -26,7 +26,10 @@ static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
     } else {
         op->type[i] = 0b11;
         op->true_type[i] = 0b11;
-        op->args[i] = my_getnbr(instr_tab[i]);
+        if (instr_tab[i][0] == LABEL_CHAR)
+            add_need_label(&instr_tab[i][1], ADD, 0b11, op->begin_offset);
+        else
+            op->args[i] = my_getnbr(&instr_tab[i][0]);
         offset_pos(IND_SIZE, ADD);
         // printf("added offset of 2 for indirect\n");
     }
