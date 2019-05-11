@@ -52,7 +52,8 @@ off_t offset_pos(ssize_t written, int status);
 void fill_needed_label(int fd, label_t *label_list);
 bool add_name_or_comment(char *instruction, header_t *header);
 void add_instruction(char **instruction_tab, op_list_t **op_list);
-op_need_label_t *add_need_label(char *name, int status, int size, off_t begin_offset);
+op_need_label_t *add_need_label(char *name, int status,
+    int size, off_t begin_offset);
 void write_in_file(header_t *header, label_t *label_list,
     op_list_t *op_list, char *new_file);
 void parse_instruction(char *instruction, label_t **label_list,

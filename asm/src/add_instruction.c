@@ -15,9 +15,11 @@ static void get_direct_indirect(op_list_t *op, char **instr_tab, int i)
 {
     if (instr_tab[i][0] == '%') {
         op->type[i] = 0b10;
-        op->true_type[i] = is_one_of_them(op->code, NO_DIRECT_SIZE) ? 0b11 : 0b10;
+        op->true_type[i] = is_one_of_them(op->code,NO_DIRECT_SIZE)
+            ? 0b11 : 0b10;
         if (instr_tab[i][1] == LABEL_CHAR)
-            add_need_label(&instr_tab[i][2], ADD, op->true_type[i], op->begin_offset);
+            add_need_label(&instr_tab[i][2], ADD,
+                op->true_type[i], op->begin_offset);
         else
             op->args[i] = my_getnbr(&instr_tab[i][1]);
         offset_pos(op->true_type[i] == 0b10 ? DIR_SIZE : IND_SIZE, ADD); // printf("added offset of %d for dir/indir\n", op->true_type[i] == 2 ? 4 : 2);

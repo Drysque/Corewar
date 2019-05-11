@@ -8,7 +8,8 @@
 #include "asm.h"
 #include "my.h"
 
-op_need_label_t *add_need_label(char *name, int status, int size, off_t begin_offset)
+op_need_label_t *add_need_label(char *name, int status,
+    int size, off_t begin_offset)
 {
     static op_need_label_t *need_label = NULL;
     op_need_label_t *new_need_label = NULL;
