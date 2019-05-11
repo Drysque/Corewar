@@ -23,7 +23,7 @@ op_need_label_t *add_need_label(char *name, int status,
         // printf("(added label %s which takes %d bytes, starting at %d)\n", new_need_label->label, new_need_label->size, offset_pos(0, GET));
         new_need_label->next_op = need_label;
         need_label = new_need_label;
-        // my_printf("instruction at %d needs %s\n", new_need_label->offset, name);
+        // printf("instruction at %d needs %s\n", new_need_label->offset, name);
     }
     return need_label;
 }

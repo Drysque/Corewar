@@ -16,7 +16,7 @@ static off_t fetch_offset(label_t *label_list, char *label)
         }
         label_list = label_list->next_label;
     }
-    my_printf("unknown label: %s", label);
+    my_printf("\n\t\e[1m\e[31munknown label:\e[0m %s\n\n", label);
     exit(84);
     return 0;
 }

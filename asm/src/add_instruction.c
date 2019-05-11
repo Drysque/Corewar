@@ -52,8 +52,9 @@ static void fill_op(op_list_t *new_op, char **instr_tab, op_t *op)
     if (is_one_of_them(op->code, NO_CODING_BYTE) == false)
         offset_pos(1, ADD);
     if (my_tablen((char const **)&instr_tab[1]) != op->nbr_args) {
-        my_printf("wrong number of arguments for instruction %s (%d)\n",
-            instr_tab[0], my_tablen((char const **)&instr_tab[1]));
+        my_printf("\n\t\e[1m\e[31mwrong number of arguments:\e[0m %s "
+            "(\e[5m%d\e[0m expected %d)\n\n", instr_tab[0],
+            my_tablen((char const **)&instr_tab[1]), op->nbr_args);
         exit(84);
     }
     get_args_type(new_op, &instr_tab[1]);
@@ -76,6 +77,6 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
             return;
         }
     }
-    my_printf("unknown instruction %s\n", instr_tab[0]);
+    my_printf("\n\t\e[1m\e[31munknown instruction:\e[0m %s\n\n", instr_tab[0]);
     exit(84);
 }

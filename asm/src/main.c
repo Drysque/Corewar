@@ -29,7 +29,7 @@ static char *check_file(char const *file, int *fd)
 
     *fd = open(file, O_RDONLY);
     if (*fd < 0) {
-        my_printf("\e[1m\e[31m%s: no such file\e[0m\n", file);
+        my_printf("\n\t\e[1m\e[31mno such file:\e[0m %s\n\n", file);
         return NULL;
     }
     dup = my_strdup(file);
