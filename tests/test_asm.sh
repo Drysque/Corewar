@@ -26,6 +26,10 @@ function test {
         ./../asm/corewar_binaries/asm/asm $file &> /dev/null
         diff .tmp ${file%.*}.cor
         if [ $? -ne 0 ] ; then
+            if [ ! -f ${file%.*}.cor ]; then
+                echo -ne "\t${GREEN}OK${NC}\n"
+                valid=$(($valid+1))
+            fi
             echo -ne "\t${RED}KO${NC}\n"
             echo "YOU:"
             hexdump -C .tmp
