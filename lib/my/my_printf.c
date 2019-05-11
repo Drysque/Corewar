@@ -7,9 +7,9 @@
 
 #include <stdarg.h>
 void my_putchar(char c);
-int switch_flags(va_list ap, char *str, int i);
+int switch_flags(va_list ap, const char *str, int i);
 
-void my_printf(char *str, ...)
+void my_printf(const char *str, ...)
 {
     va_list ap;
 

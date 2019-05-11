@@ -18,10 +18,10 @@ SRCDIR		=	./src
 SRC			=	$(SRCDIR)/main.c				\
 				../include/op.c					\
 				$(SRCDIR)/add_instruction.c		\
-				$(SRCDIR)/add_name_or_comment.c	\
 				$(SRCDIR)/add_needed_label.c	\
 				$(SRCDIR)/compile.c				\
 				$(SRCDIR)/fill_needed_label.c	\
+				$(SRCDIR)/get_name_or_comment.c	\
 				$(SRCDIR)/get_next_instruction.c\
 				$(SRCDIR)/get_no_endian.c\
 				$(SRCDIR)/offset_manage.c		\

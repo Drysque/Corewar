@@ -18,7 +18,7 @@ char my_str_to_int16(char const *str);
 int my_strlen(char const *str);
 int my_tablen(char const **tab);
 
-void my_printf(char *str, ...);
+void my_printf(const char *str, ...);
 void my_putchar(char c);
 int my_putstr(char const *str);
 

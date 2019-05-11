@@ -42,15 +42,14 @@ static char *clean_instruction(char *instruction)
 }
 
 void parse_instruction(char *instruction, label_t **label_list,
-    op_list_t **op_list, header_t *header)
+    op_list_t **op_list)
 {
     char **tab = my_str_delim_array(clean_instruction(instruction), SEPAR_STR);
     int len = my_strlen(tab[0]);
 
     if (tab == NULL || len == 0)
         return;
-    if (add_name_or_comment(instruction, header));
-    else if (tab[0][len - 1] == LABEL_CHAR) {
+    if (tab[0][len - 1] == LABEL_CHAR) {
         tab[0][len - 1] = 0;
         add_label(tab[0], label_list);
         add_instruction(&tab[1], op_list);

@@ -16,9 +16,10 @@ void compile(int fd, char *new_file)
     op_list_t *op_list = NULL;
 
     // printf("\ntotal bytes theorically written: \e[1m\e[32m%d\e[0m (%d)\n", offset_pos(0, GET) + sizeof(header_t), offset_pos(0, GET));
+    get_name_or_comment(fd, header);
     while ((str = get_next_instruction(fd)) != NULL) {
         // printf("\ninstruction found: {\e[1m\e[34m%s\e[0m}\n", str);
-        parse_instruction(str, &label_list, &op_list, header);
+        parse_instruction(str, &label_list, &op_list);
         free(str);
     }
     // printf("\n------------BEGINNING WRITING-----------\n\n");

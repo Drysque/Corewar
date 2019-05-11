@@ -34,8 +34,10 @@ static char *check_file(char const *file, int *fd)
     }
     dup = my_strdup(file);
     for (size_t i = my_strlen(dup) - 1; i > 0; i--)
-        if (dup[i] == '.')
+        if (dup[i] == '.') {
             dup[i] = '\0';
+            break;
+        }
     dup_cor = my_strcat(dup, ".cor");
     free(dup);
     return dup_cor;
