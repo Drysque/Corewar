@@ -15,6 +15,7 @@ function timeout {
 }
 
 function test {
+    make re -C ..
     for file in ./*.s
     do
         timeout $$ &
@@ -23,7 +24,7 @@ function test {
         echo "Testing champion : " $file
         ./../asm/asm $file &> /dev/null
         cat ${file%.*}.cor > .tmp
-        ./../asm/corewar_binaries/asm/asm $file &> /dev/null
+        ./corewar_binaries/asm/asm $file &> /dev/null
         diff .tmp ${file%.*}.cor
         if [ $? -ne 0 ] ; then
             if [ ! -f ${file%.*}.cor ]; then
