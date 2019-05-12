@@ -7,8 +7,9 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+char *my_strndup(char const *src, int n);
 
-static bool is_one_of_them(char c, char *str)
+bool is_one_of_them(char c, char const *str)
 {
     for (int i = 0; str[i]; i++)
         if (c == str[i])
@@ -16,18 +17,7 @@ static bool is_one_of_them(char c, char *str)
     return false;
 }
 
-char *my_strncpy(char const *src, int n)
-{
-    int i = 0;
-    char *dest = malloc(sizeof(char) * (n + 1));
-
-    for (i = 0; src[i] && i < n; i++)
-        dest[i] = src[i];
-    dest[i] = '\0';
-    return (dest);
-}
-
-int delim_count(char const *str, char *delims)
+static int delim_count(char const *str, char const *delims)
 {
     int count = 0;
 
@@ -38,7 +28,7 @@ int delim_count(char const *str, char *delims)
     return (count);
 }
 
-char **my_str_delim_array(char const *str, char *delims)
+char **my_str_delim_array(char const *str, char const *delims)
 {
     int count = delim_count(str, delims);
     char **array = malloc(sizeof(char *) * (count + 1));
@@ -48,7 +38,7 @@ char **my_str_delim_array(char const *str, char *delims)
     for (int i = 0; str && str[i]; length = 0, a++) {
         for (; str[i] && is_one_of_them(str[i], delims); i++);
         for (; str[i] && !is_one_of_them(str[i], delims); i++, length++);
-        array[a] = my_strncpy(&str[i - length], length);
+        array[a] = my_strndup(&str[i - length], length);
     }
     array[count] = NULL;
     return (array);

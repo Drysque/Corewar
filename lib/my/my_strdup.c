@@ -6,22 +6,18 @@
 */
 
 #include <stdlib.h>
-int my_strlen(char const *str);
+int my_strlen(char const *new);
 
 char *my_strdup(char const *src)
 {
-    char *str;
-    int len;
+    int len = my_strlen(src);
+    char *new = malloc((len + 1) * sizeof(char));
     int i = 0;
 
-    len = my_strlen(src);
-    str = malloc((len + 1) * sizeof(char));
-    if (str == NULL)
-        return (NULL);
-    str[len] = '\0';
-    while (src[i]) {
-        str[i] = src[i];
-        i++;
-    }
-    return (str);
+    if (new == NULL)
+        return NULL;
+    for (; src[i]; i++)
+        new[i] = src[i];
+    new[len] = '\0';
+    return (new);
 }

@@ -15,7 +15,8 @@ NAME	=	libmy.a
 
 SRC		=	my_printf.c				\
 			format_switches.c		\
-			get_next_line.c		\
+			get_next_line.c			\
+			my_calloc.c				\
 			my_getnbr.c				\
 			my_put_long_base.c		\
 			my_put_long_unsigned.c	\
@@ -36,6 +37,9 @@ SRC		=	my_printf.c				\
 			my_strcpy.c				\
 			my_strdup.c				\
 			my_strlen.c				\
+			my_strncpy.c			\
+			my_strndup.c			\
+			my_tablen.c				\
 			switch_flags.c			\
 
 OBJ	=		$(SRC:.c=.o)

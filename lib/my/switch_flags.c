@@ -91,7 +91,7 @@ int switch_bonus(va_list ap, char const *str, int i)
     return (i);
 }
 
-int switch_flags(va_list ap, char const *str, int i)
+int switch_flags(va_list ap, const char *str, int i)
 {
     switch_letters(ap, str[i + 1]);
     switch_numbers(ap, str[i + 1]);
