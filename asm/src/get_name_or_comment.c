@@ -15,6 +15,12 @@ static const char *errors_comment[] = {
     "\n\t\e[1m\e[31mNo comment is specified\e[0m\n\n",
     "\n\t\e[1m\e[31mThe comment must follow the name\e[0m\n\n"};
 
+static void empty_file(void)
+{
+    my_printf("\n\t\e[1m\e[31mFile is empty\e[0m\n\n");
+    exit(84);
+}
+
 static void remove_quotes(char *str)
 {
     if (str[0] == '\"') {
@@ -39,6 +45,8 @@ static void get_info(int fd, char *to_get, char *to_write, const char **error)
     char *str = get_next_instruction(fd);
     int len = my_strlen(to_get);
 
+    if (str == NULL)
+        empty_file();
     for (; str[index] && is_one_of_them(str[index], " \t"); index++);
     if (my_strncmp(&str[index], to_get, len)) {
         index += len;
