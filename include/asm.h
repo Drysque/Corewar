@@ -49,6 +49,7 @@ void compile(int fd, char *new_file);
 off_t offset_pos(ssize_t written, int status);
 void get_name_or_comment(int fd, header_t *header);
 void fill_needed_label(int fd, label_t *label_list);
+void get_args_type(op_list_t *new_op, char **instr_tab, op_t *op);
 void add_instruction(char **instruction_tab, op_list_t **op_list);
 void write_in_file(header_t *header, label_t *label_list,
     op_list_t *op_list, char *new_file);void parse_instruction(char *instruction, label_t **label_list,
