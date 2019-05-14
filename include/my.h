@@ -12,8 +12,6 @@
 #include <stdbool.h>
 
 int my_getnbr(char const *str);
-char my_str_to_char(char const *str);
-char my_str_to_int16(char const *str);
 
 int my_strlen(char const *str);
 int my_tablen(char const **tab);
@@ -37,5 +35,7 @@ void *my_calloc(size_t size);
 
 char *get_next_line(int fd);
 char **my_str_delim_array(char const *str, char const *delims);
+
+void my_error(const char *error);
 
 #endif /* MY_H_ */
