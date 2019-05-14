@@ -8,6 +8,18 @@
 #include "asm.h"
 #include "my.h"
 
+static void check_info_redef(char *str)
+{
+    int index = 0;
+    char *comment_str = COMMENT_CMD_STRING;
+
+    for (; str[index] && is_one_of_them(str[index], " \t"); index++);
+    if (my_strncmp(&str[index], NAME_CMD_STRING, my_strlen(NAME_CMD_STRING)))
+        my_error("\n\t\e[1m\e[31mName can only be defined once\e[0m\n\n");
+    if (my_strncmp(&str[index], comment_str, my_strlen(comment_str)))
+        my_error("\n\t\e[1m\e[31mComment can only be defined once\e[0m\n\n");
+}
+
 void compile(int fd, char *new_file)
 {
     char *str;
@@ -19,6 +31,7 @@ void compile(int fd, char *new_file)
     get_name_or_comment(fd, header);
     while ((str = get_next_instruction(fd)) != NULL) {
         // printf("\ninstruction found: {\e[1m\e[34m%s\e[0m}\n", str);
+        check_info_redef(str);
         parse_instruction(str, &label_list, &op_list);
         free(str);
     }
