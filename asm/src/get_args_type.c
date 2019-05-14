@@ -15,7 +15,8 @@ static void set_register(char **instr_tab, op_list_t *new_op, op_t *op, int i)
     new_op->type[i] = 0b01;
     new_op->true_type[i] = 0b01;
     if ((op->type[i] & T_REG) == 0) {
-        my_printf("\n\t\e[1m\e[31mInvalid argument type for instruction:\e[0m \e[5m%s\e[0m register value not expected\n\n", op->mnemonique);
+        my_printf("\n\t\e[1m\e[31mInvalid argument type for instruction:\e[0m "
+            "\e[5m%s\e[0m register value not expected\n\n", op->mnemonique);
         exit(84);
     }
     new_op->args[i] = my_getnbr(&instr_tab[i][1]);
@@ -30,13 +31,16 @@ static void set_register(char **instr_tab, op_list_t *new_op, op_t *op, int i)
 static void set_direct(char **instr_tab, op_list_t *new_op, op_t *op, int i)
 {
     new_op->type[i] = 0b10;
-    new_op->true_type[i] = is_one_of_them(new_op->code, NO_DIRECT_SIZE) ? 0b11 : 0b10;
+    new_op->true_type[i] = is_one_of_them(new_op->code, NO_DIRECT_SIZE)
+        ? 0b11 : 0b10;
     if ((op->type[i] & T_DIR) == 0) {
-        my_printf("\n\t\e[1m\e[31mInvalid argument type for instruction:\e[0m \e[5m%s\e[0m direct value not expected\n\n", op->mnemonique);
+        my_printf("\n\t\e[1m\e[31mInvalid argument type for instruction:\e[0m "
+            "\e[5m%s\e[0m direct value not expected\n\n", op->mnemonique);
         exit(84);
     }
     if (instr_tab[i][1] == LABEL_CHAR)
-        add_need_label(&instr_tab[i][2], ADD, new_op->true_type[i], new_op->begin_offset);
+        add_need_label(&instr_tab[i][2], ADD, new_op->true_type[i],
+            new_op->begin_offset);
     else
         new_op->args[i] = my_getnbr(&instr_tab[i][1]);
     offset_pos(new_op->true_type[i] == 0b10 ? DIR_SIZE : IND_SIZE, ADD);
@@ -47,7 +51,8 @@ static void set_indirect(char **instr_tab, op_list_t *new_op, op_t *op, int i)
     new_op->type[i] = 0b11;
     new_op->true_type[i] = 0b11;
     if ((op->type[i] & T_IND) == 0) {
-        my_printf("\n\t\e[1m\e[31mInvalid argument type for instruction:\e[0m \e[5m%s\e[0m indirect value not expected\n\n", op->mnemonique);
+        my_printf("\n\t\e[1m\e[31mInvalid argument type for instruction:\e[0m "
+            "\e[5m%s\e[0m indirect value not expected\n\n", op->mnemonique);
         exit(84);
     }
     if (instr_tab[i][0] == LABEL_CHAR)
