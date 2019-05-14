@@ -44,10 +44,10 @@ function test {
                     valid=$(($valid+1))
                 fi
                 echo -ne "\t${RED}KO${NC}\n"
-                # echo "YOU:"
-                # hexdump -C .tmp
-                # echo "MOULI:"
-                # hexdump -C ${file%.*}.cor
+                echo "YOU:"
+                hexdump -C .tmp
+                echo "MOULI:"
+                hexdump -C ${file%.*}.cor
             else
                 echo -ne "\t${GREEN}OK${NC}\n"
                 valid=$(($valid+1))
