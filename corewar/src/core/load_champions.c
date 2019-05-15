@@ -34,6 +34,7 @@ int load_champions(environment_t *env)
 {
     int division = 0;
     int offset = 0;
+    int prog_nb = 0;
 
     for (process_t *tail = PROC_HEAD(env); tail != NULL; tail = tail->next) {
         if (read(tail->fd, &tail->header, sizeof(header_t)) < (ssize_t)sizeof(header_t))
@@ -43,6 +44,11 @@ int load_champions(environment_t *env)
             my_error("\n\tInvalid prog_size\n\n");
         if (get_no_endian(tail->header.magic, 4) != COREWAR_EXEC_MAGIC)
             my_error("\n\tFile is not an executable\n\n");
+        if (!tail->prog_number)
+            tail->prog_number = prog_nb++;
+        else
+            prog_nb += 1;
+        #warning "DIFFERENT PROCESSES CAN HAVE THE SAME PROG NB"
     }
     division = (int)(MEM_SIZE / get_list_len(env->processes_head));
     printf("DIVISION => %d\n", division);
