@@ -16,13 +16,13 @@ bool in_process)
     (void)argv;
 
     if (PROC_HEAD(env) == NULL) {
-        PROC_HEAD(env) = malloc(sizeof(processes_t));
+        PROC_HEAD(env) = malloc(sizeof(process_t));
         if (PROC_HEAD(env) == NULL)
             return (ERROR);
         PROC_TAIL(env) = PROC_HEAD(env);
         created = true;
     } else if (!in_process) {
-        PROC_TAIL(env)->next = malloc(sizeof(processes_t));
+        PROC_TAIL(env)->next = malloc(sizeof(process_t));
         if (PROC_TAIL(env)->next == NULL)
             return (ERROR);
         PROC_TAIL(env) = PROC_TAIL(env)->next;
@@ -32,7 +32,6 @@ bool in_process)
         PROC_TAIL(env)->next = NULL;
         PROC_TAIL(env)->address = 0;
         PROC_TAIL(env)->prog_number = 0;
-        PROC_TAIL(env)->name = NULL;
     }
     return (0);
 }
@@ -61,7 +60,15 @@ int *index, bool *in_process)
     }
     if (my_strcmp(argv[*index - 1], "-dump"))
         return (ERROR);
-    PROC_TAIL(env)->name = my_strdup(argv[*index]);
+    printf("FILE NAME: %s\n", argv[*index]);
+    PROC_TAIL(env)->fd = open(argv[*index], O_RDONLY);
+    if (PROC_TAIL(env)->fd == -1) {
+        printf("ERROR while loading champion %s\n", argv[*index]);
+        free(PROC_TAIL(env));
+        PROC_TAIL(env) = NULL;
+        for (process_t *tail = PROC_HEAD(env); tail != NULL; tail = tail->next)
+            PROC_TAIL(env) = tail;
+    }
     printf("END OF PROCESS\n");
     *in_process = false;
     return (0);
@@ -92,11 +99,10 @@ environment_t *read_parameters(int argc, char **argv)
     }
     printf("\n-dump NBR_CYCLE: %d\n", new->nbr_cycle);
     if (new->processes_tail != NULL) {
-        for (processes_t *tail = PROC_HEAD(new); tail != NULL; tail = tail->next) {
+        for (process_t *tail = PROC_HEAD(new); tail != NULL; tail = tail->next) {
             printf("========================================================\n");
             printf("-n PROG_NBR: %d\n", tail->prog_number);
             printf("-a PROG_ADDR: %ld\n", tail->address);
-            printf("PROG NAME: %s\n", tail->name);
         }
     }
     return (new);
