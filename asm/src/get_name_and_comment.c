@@ -17,22 +17,30 @@ static const char *ERRORS_COMMENT[] = {
     "\n\t\e[1m\e[31mWarning:\e[0m No comment is specified\n\n",
     "\n\t\e[1m\e[31mThe comment is too long\e[0m\n\n"};
 
+static void check_nothing_else(char *str)
+{
+    for (int i = 0; str[i]; i++)
+        if (is_one_of_them(str[i], " \t") == false) {
+            my_printf("\n\t\e[1m\e[31mSyntax error:\e[0m \e[5m%c\e[0m unexpected after quotes\n\n", str[i]);
+            exit(84);
+        }
+}
+
 static void remove_quotes(char *str)
 {
     if (str[0] == '\"') {
         for (int i = 1; str[i]; i++)
             if (str[i] == '\"') {
                 str[i] = 0;
+                check_nothing_else(&str[i + 1]);
                 return;
             }
     } else {
-        my_printf("\n\t\e[1m\e[31mSyntax error:\e[0m expected opening "
-            "'\e[5m%c\e[0m'\n\n", '\"');
-        exit(84);
+        my_error("\n\t\e[1m\e[31mSyntax error:\e[0m expected opening "
+            "'\e[5m\"\e[0m'\n\n");
     }
-    my_printf("\n\t\e[1m\e[31mSyntax error:\e[0m expected closing "
-        "'\e[5m%c\e[0m'\n\n", '\"');
-    exit(84);
+    my_error("\n\t\e[1m\e[31mSyntax error:\e[0m expected closing "
+        "'\e[5m\"\e[0m'\n\n");
 }
 
 static void get_name(int fd, char *to_write)
