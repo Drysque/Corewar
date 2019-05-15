@@ -27,7 +27,7 @@ static void delete_node(process_t *tail)
 static int run_instruction(unsigned char *arena, process_t *tail)
 {
     int index = arena[(tail->address + tail->pc) % MEM_SIZE] - 1;
-    static const int (*inst_tab[])(unsigned char *arena, process_t *tail) =
+    static int (*inst_tab[])(unsigned char *arena, process_t *tail) =
     {&op_live, &op_lld, &op_st, &op_add, &op_sub, &op_and, &op_or, &op_xor, &op_zjmp,
     &op_ldi, &op_sti, &op_fork, &op_lld, &op_lldi, &op_lfork, &op_aff};
 

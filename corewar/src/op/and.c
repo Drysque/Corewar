@@ -8,9 +8,9 @@
 #include "vm.h"
 #include "op.h"
 
-int op_and(unsigned char *arena, process_t *proc)
+int op_and(environment_t *env)
 {
-    int index = INDEX(arena, proc);
+    int index = INSTRUCTION(env);
 
     if (index != 0x06)
         return (1);

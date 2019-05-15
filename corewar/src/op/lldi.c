@@ -8,7 +8,7 @@
 #include "vm.h"
 #include "op.h"
 
-int op_lldi(unsigned char *arena, process_t *tail)
+int op_lldi(environment_t *env)
 {
     return 0;
 }

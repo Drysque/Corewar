@@ -8,15 +8,15 @@
 #include "vm.h"
 #include "op.h"
 
-int op_add(unsigned char *arena, process_t *proc)
+int op_add(environment_t *env)
 {
-    int index = INDEX(arena, proc);
-    char coding_byte = (arena[(proc->address + proc->pc + 1) % MEM_SIZE]);
+    int index = INSTRUCTION(env);
+    char coding_byte = (env->arena[(PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 1) % MEM_SIZE]);
 
     if (index != 0x04 || coding_byte !=
     (0b01 << 6 | 0b01 << 4 | 0b01 << 2 | 0b00))
         return (1);
-    proc->registers[(proc->address + proc->pc + 4) % MEM_SIZE][0] =
-    (proc->address + proc->pc + 2) + (proc->address + proc->pc + 3);
+    PROC_TAIL(env)->registers[(PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 4) % MEM_SIZE][0] =
+    (PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 2) + (PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 3);
     return (0);
 }

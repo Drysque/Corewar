@@ -8,7 +8,7 @@
 #include "vm.h"
 #include "op.h"
 
-int op_sti(unsigned char *arena, process_t *tail)
+int op_sti(environment_t *env)
 {
     return 0;
 }
