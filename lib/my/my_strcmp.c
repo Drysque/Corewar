@@ -6,6 +6,7 @@
 */
 
 #include <stdbool.h>
+
 int my_strlen(char const *str);
 
 int my_strcmp_diff(char const *s1, char const *s2)
