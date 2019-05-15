@@ -67,16 +67,33 @@ int *index, bool *in_process)
     return (0);
 }
 
+int check_parameters_validity(int argc, char **argv)
+{
+    int params_only = 1;
+
+    for (int i = 0; argv[i]; i++) {
+        if ((argv[i][0] == '-') && (!my_strcmp(argv[i], "-n") && !my_strcmp(argv[i], "-a") && !my_strcmp(argv[i], "-dump")))
+            return (1);
+        if (argv[i][0] != '-')
+            params_only = 0;
+    }
+    if (params_only)
+        return (1);
+    return (0);
+}
+
 environment_t *read_parameters(int argc, char **argv)
 {
-    environment_t *new = malloc(sizeof(environment_t));
+    environment_t *new = NULL;
     bool in_process = true;
     int index = 1;
 
+    new = malloc(sizeof(environment_t));
     new->processes_tail = NULL;
     new->processes_head = NULL;
-    if (index <= argc && new == NULL)
+    if ((index <= argc && new == NULL) || check_parameters_validity(argc, argv))
         return (NULL);
+    printf("lol");
     if (my_strcmp(argv[index], "-dump") && index + 2 <= argc) {
         if (my_getnbr(argv[index + 1]) <= 0)
             return (NULL);
@@ -90,14 +107,14 @@ environment_t *read_parameters(int argc, char **argv)
             return (NULL);
         index += 1;
     }
-    printf("\n-dump NBR_CYCLE: %d\n", new->nbr_cycle);
-    if (new->processes_tail != NULL) {
-        for (processes_t *tail = PROC_HEAD(new); tail != NULL; tail = tail->next) {
-            printf("========================================================\n");
-            printf("-n PROG_NBR: %d\n", tail->prog_number);
-            printf("-a PROG_ADDR: %ld\n", tail->address);
-            printf("PROG NAME: %s\n", tail->name);
-        }
-    }
+    // printf("\n-dump NBR_CYCLE: %d\n", new->nbr_cycle);
+    // if (new->processes_tail != NULL) {
+    //     for (processes_t *tail = PROC_HEAD(new); tail != NULL; tail = tail->next) {
+    //         printf("========================================================\n");
+    //         printf("-n PROG_NBR: %d\n", tail->prog_number);
+    //         printf("-a PROG_ADDR: %ld\n", tail->address);
+    //         printf("PROG NAME: %s\n", tail->name);
+    //     }
+    // }
     return (new);
 }
