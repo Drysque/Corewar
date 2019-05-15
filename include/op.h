@@ -5,7 +5,6 @@
 ** op.h for Corewar
 */
 
-
 #ifndef _OP_H_
 #define _OP_H_
 
@@ -44,12 +43,12 @@ typedef char    args_type_t;
 
 struct  op_s
 {
-   char         *mnemonique;
-   char         nbr_args;
-   args_type_t  type[MAX_ARGS_NUMBER];
-   char         code;
-   int          nbr_cycles;
-   char         *comment;
+    char         *mnemonique;
+    char         nbr_args;
+    args_type_t  type[MAX_ARGS_NUMBER];
+    char         code;
+    int          nbr_cycles;
+    char         *comment;
 };
 
 typedef struct op_s     op_t;
@@ -75,10 +74,10 @@ extern  op_t    op_tab[];
 
 struct header_s
 {
-   int  magic;
-   char prog_name[PROG_NAME_LENGTH + 1];
-   int  prog_size;
-   char comment[COMMENT_LENGTH + 1];
+    int  magic;
+    char prog_name[PROG_NAME_LENGTH + 1];
+    int  prog_size;
+    char comment[COMMENT_LENGTH + 1];
 };
 
 typedef struct header_s header_t;

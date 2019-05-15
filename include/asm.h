@@ -52,8 +52,9 @@ char *get_name_and_comment(int fd, header_t *header);
 void get_args_type(op_list_t *new_op, char **instr_tab, op_t *op);
 void add_instruction(char **instruction_tab, op_list_t **op_list);
 void write_in_file(header_t *header, label_t *label_list,
-    op_list_t *op_list, char *new_file);void parse_instruction(char *instruction, label_t **label_list,
-    op_list_t **op_list);
+    op_list_t *op_list, char *new_file);
+void parse_instruction(char *instruction, label_t **label_list,
+        op_list_t **op_list);
 op_need_label_t *add_need_label(char *name, int status, int size,
         off_t begin_offset);
 
