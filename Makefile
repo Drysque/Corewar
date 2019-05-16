@@ -15,6 +15,8 @@ VMDIR		=	./corewar
 
 LIBDIR		=	./lib/my
 
+TESTDIR		=	./tests/unit_tests
+
 all:
 			$(MAKE) -C $(LIBDIR)
 			$(MAKE) -C $(COMPILERDIR)
@@ -29,12 +31,17 @@ clean:
 			$(MAKE) clean -C $(LIBDIR)
 			$(MAKE) clean -C $(COMPILERDIR)
 			$(MAKE) clean -C $(VMDIR)
+			$(MAKE) clean -C $(TESTDIR)
 
 fclean:
 			$(MAKE) fclean -C $(LIBDIR)
 			$(MAKE) fclean -C $(COMPILERDIR)
 			$(MAKE) fclean -C $(VMDIR)
-			#find . \( -name '*~' -o -name '*.cor' \) -delete
+			$(MAKE) fclean -C $(TESTDIR)
+
+tests_run:
+			$(MAKE) tests_run -C $(TESTDIR)
+			./unit_test
 
 re: fclean all
 
