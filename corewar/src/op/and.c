@@ -17,6 +17,7 @@ int get_arg(environment_t *env, int arg_nb)
     int offset = PROC_TAIL(env)->address + PROC_TAIL(env)->pc;
     int res = 0;
     int shift = 0;
+    int tmp = 0;
 
     printf("ENTERING get_arg with arg_nb=%d and offset=%d\n", arg_nb, offset);
     printf("CODING BYTE: %x %x %x %x\n", GET_BITS(env->arena[(offset + 1) % MEM_SIZE], 3),
@@ -25,27 +26,29 @@ int get_arg(environment_t *env, int arg_nb)
     GET_BITS(env->arena[(offset + 1) % MEM_SIZE], 0));
 
     for (int i = 1; i <= arg_nb; i += 1) {
-        printf("=> %x\n", GET_BITS(env->arena[(offset) % MEM_SIZE], 4 - i));
-        switch (GET_BITS(env->arena[(offset + 1) % MEM_SIZE], 4 - i)) {
+        tmp = 4 - i;
+        printf("%d => %x\n", 4 - i, GET_BITS(env->arena[(offset + 1) % MEM_SIZE], tmp));
+        switch (GET_BITS(env->arena[(offset + 1) % MEM_SIZE], tmp)) {
             case 0b01:
-                res = (int)env->arena[(offset + shift) % MEM_SIZE] % REG_NUMBER;
+                res = (int)env->arena[(offset + shift + 2) % MEM_SIZE] % REG_NUMBER;
                 shift += 1;
                 break;
             case 0b11:
-                res = env->arena[(offset + 1 + shift) % MEM_SIZE] << 8
-                | env->arena[(offset + 2 + shift) % MEM_SIZE];
+                printf("%d\n", shift + offset);
+                res = env->arena[(offset + 2 + shift) % MEM_SIZE] << 8
+                | env->arena[(offset + 3 + shift) % MEM_SIZE];
                 shift += 2;
                 break;
             case 0b10:
                 if (is_one_of_them(INSTRUCTION(env), INDEXES)) {
-                    res = env->arena[(offset + shift + 1) % MEM_SIZE] << 8
-                    | env->arena[(offset + shift + 2) % MEM_SIZE];
+                    res = env->arena[(offset + 2 + shift) % MEM_SIZE] << 8
+                    | env->arena[(offset + 3 + shift) % MEM_SIZE];
                     shift += 2;
                 } else {
-                    res = env->arena[(offset + shift + 1) % MEM_SIZE] << 24
-                    | env->arena[(offset + shift + 2) % MEM_SIZE] << 16
-                    | env->arena[(offset + shift + 3) % MEM_SIZE] << 8
-                    | env->arena[(offset + shift + 4) % MEM_SIZE];
+                    res = env->arena[(offset + shift + 2) % MEM_SIZE] << 24
+                    | env->arena[(offset + shift + 3) % MEM_SIZE] << 16
+                    | env->arena[(offset + shift + 4) % MEM_SIZE] << 8
+                    | env->arena[(offset + shift + 5) % MEM_SIZE];
                     shift += 4;
                 }
                 break;
