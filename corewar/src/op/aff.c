@@ -20,6 +20,6 @@ int op_aff(environment_t *env)
         return (1);
     my_printf("%d\n",
     (PROC_TAIL(env)->registers[(PROC_TAIL(env)->address
-    + PROC_TAIL(env)->pc + 2) % MEM_SIZE][0]) % 256);
+    + PROC_TAIL(env)->pc + 2) % MEM_SIZE]) % 256);
     return (3);
 }

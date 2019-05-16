@@ -18,12 +18,13 @@
 
 /*                  Process structure                       */
 typedef struct process_list_s {
+    int carry;                              // carry is set to 1 if the last instruction worked
     int fd;                                 // binary file fd closed when champion is load in memory
     short pc;                               // program counter (offset from address to current instruction) in 2 bytes
     int cycles_left;                        // cycles left before instruction execution
     int cycles_to_die;                      // cycles left before death if no live instruction is called
     header_t header;                        // header of the binary
-    int registers[REG_NUMBER][REG_SIZE];    // registers of the binary
+    int registers[REG_NUMBER];              // registers of the binary
     unsigned int prog_number;               // actual programm number
     unsigned long int address;              // address of the first programm instruction
     struct process_list_s *next;            // pointer to next process
@@ -44,26 +45,34 @@ typedef struct environment_s {
 
 static const int ERROR = 84;                // error code
 
-
-//  Reads all the given program parameters and create a first processes
-//  list and fill their beginning address and prog nb if specified
+///  Reads all the given program parameters and create a first processes
+///  list and fill their beginning address and prog nb if specified
 environment_t *read_parameters(int argc, char **argv);
 
-//  Reads binary header and check its validity. It also removes little endian
-//  on prog size and set all the memory start address and writes champions
+///  Reads binary header and check its validity. It also removes little endian
+///  on prog size and set all the memory start address and writes champions
 int load_champions(environment_t *env);
 
-// Returns the given list len
+/// Returns the given list len
 int get_list_len(process_t *head);
 
-// Main loop of the VM. It exec for each process currently alive, the current
-// instruction and update pc, cycles_left, cycles_to_die if necessary.
+/// gives the content of the arg_nbth parameter of an instruction
+/// wheter it is a register, direct or indirect
+/// /!\ given instruction must have a coding byte
+int get_arg(environment_t *env, int arg_nb);
+
+/// returns len of the current instruction
+/// /!\ instruction must have a coding byte
+int get_instruction_size(environment_t *env);
+
+/// Main loop of the VM. It exec for each process currently alive, the current
+/// instruction and update pc, cycles_left, cycles_to_die if necessary.
 int run_vm(environment_t *env);
 
-// gives the NBth bit pairs in a byt
-// expl with byte = 10 01 11 01
-//  nb = 0 => 0b01
-//  nb = 1 => 0b11 ...
+/// gives the NBth bit pairs in a byte
+/// expl with byte = 10 10 11 01
+///  nb = 0 => 0b01
+///  nb = 1 => 0b11 ...
 #define GET_BITS(byte, nb) ((byte >> (2 * nb)) & 0b11)
 
 // gives the current instruction mnemonique (ex: 0x01 if live is the current instruction)
@@ -76,116 +85,100 @@ int run_vm(environment_t *env);
 
 static const int OP_ERROR = 1; // operation error code
 
-// code: 0x01
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x01
+/// coding_byte:
+/// parameters:
+/// action:
 int op_live(environment_t *env);
 
-// code: 0x02
-// size:
-// coding_byte:
-// parameters:
-// action:
-int op_ls(environment_t *env);
+/// code: 0x02
+/// coding_byte:
+/// parameters:
+/// action:
+int op_ld(environment_t *env);
 
-// code: 0x03
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x03
+/// coding_byte: yes
+/// parameters: takes a register and a direct or indirect
+/// action: stores the content of the 1st parameter (register) into the 2nd
 int op_st(environment_t *env);
 
-// code: 0x04
-// size: 5
-// coding_byte: yes
-// parameters: 3 registers
-// action: arg3 = arg1 + arg2
+/// code: 0x04
+/// coding_byte: yes
+/// parameters: 3 registers
+/// action: arg3 = arg1 + arg2
 int op_add(environment_t *env);
 
-// code: 0x05
-// size: 5
-// coding_byte: yes
-// parameters: 3 registers
-// action: arg3 = arg1 - arg2
+/// code: 0x05
+/// coding_byte: yes
+/// parameters: 3 registers
+/// action: arg3 = arg1 - arg2
 int op_sub(environment_t *env);
 
-// code: 0x06
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x06
+/// coding_byte: yes
+/// parameters: arg3 is register, other can be dir-ind or reg
+/// action: arg3(reg) = arg1 & arg2
 int op_and(environment_t *env);
 
-// code: 0x07
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x07
+/// coding_byte: yes
+/// parameters: arg3 is register, other can be dir-ind or reg
+/// action: arg3(reg) = arg1 | arg2
 int op_or(environment_t *env);
 
-// code: 0x08
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x08
+/// coding_byte: yes
+/// parameters: arg3 is register, other can be dir-ind or reg
+/// action: arg3(reg) = arg1 ^ arg2
 int op_xor(environment_t *env);
 
-// code: 0x09
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x09
+/// coding_byte: no
+/// parameters: one index
+/// action: jmp to pc + index if carry == 1
 int op_zjmp(environment_t *env);
 
-// code: 0x0a
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x0a
+/// coding_byte:
+/// parameters:
+/// action:
 int op_ldi(environment_t *env);
 
-// code: 0x0b
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x0b
+/// coding_byte:
+/// parameters: 3: one register, and 2 indexes or register
+/// action: stores the first arg to PC + (arg2 + arg3) % IDX_MOD
 int op_sti(environment_t *env);
 
-// code: 0x0c
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x0c
+/// coding_byte:
+/// parameters:
+/// action:
 int op_fork(environment_t *env);
 
-// code: 0x0d
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x0d
+/// coding_byte:
+/// parameters:
+/// action:
 int op_lld(environment_t *env);
 
-// code: 0x0e
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x0e
+/// coding_byte:
+/// parameters:
+/// action:
 int op_lldi(environment_t *env);
 
-// code: 0x0f
-// size:
-// coding_byte:
-// parameters:
-// action:
+/// code: 0x0f
+/// coding_byte:
+/// parameters:
+/// action:
 int op_lfork(environment_t *env);
 
-// code: 0x10
-// size: 3
-// coding_byte: yes
-// parameters: one register
-// action: prints the ascii character stored in the register
+/// code: 0x10
+/// coding_byte: yes
+/// parameters: one register
+/// action: prints the ascii character stored in the register
 int op_aff(environment_t *env);
 
 #endif /* !VM_H_ */

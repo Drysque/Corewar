@@ -10,5 +10,5 @@
 
 int op_live(environment_t *env)
 {
-    return (1);
+    ;
 }
