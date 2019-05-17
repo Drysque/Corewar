@@ -22,7 +22,7 @@ static void check_info_redef(char *str)
 
 void compile(int fd, char *new_file)
 {
-    char *str;
+    char *str = NULL;
     header_t *header = my_calloc(sizeof(header_t));
     label_t *label_list = NULL;
     op_list_t *op_list = NULL;

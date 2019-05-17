@@ -15,19 +15,19 @@ RM			=	rm -f
 
 SRCDIR		=	../../asm/src
 
-SRC			=	$(SRCDIR)/main.c					\
-				$(SRCDIR)/add_instruction.c			\
-				$(SRCDIR)/add_needed_label.c		\
+SRC			=	asm_tests.c							\
+				../../include/op.c					\
 				$(SRCDIR)/compile.c					\
-				$(SRCDIR)/fill_needed_label.c		\
-				$(SRCDIR)/get_args_type.c			\
 				$(SRCDIR)/get_name_and_comment.c	\
 				$(SRCDIR)/get_next_instruction.c	\
+				$(SRCDIR)/write_in_file.c			\
 				$(SRCDIR)/get_no_endian.c			\
+				$(SRCDIR)/fill_needed_label.c		\
+				$(SRCDIR)/get_args_type.c			\
 				$(SRCDIR)/offset_manage.c			\
 				$(SRCDIR)/parse_instruction.c		\
-				$(SRCDIR)/write_in_file.c			\
-				../../include/op.c					\
+				$(SRCDIR)/add_instruction.c			\
+				$(SRCDIR)/add_needed_label.c		\
 
 CPPFLAGS	=	-iquote ../../include/
 
@@ -35,7 +35,7 @@ LDFLAGS		=	-L../../lib/my
 
 LDLIBS		=	-lmy
 
-DEBUGFLAGS	=	-g3 -Wall -Wextra
+DEBUGFLAGS	=	-g3 -Wall -Wextra -W
 
 NAME		=	unit_test
 
@@ -55,4 +55,4 @@ fclean: 		clean
 
 re: 			fclean all
 
-.PHONY:			debug clean fclean re all
+.PHONY:			tests_run clean fclean re all

@@ -14,6 +14,14 @@
 #include <stdbool.h>
 #include "op.h"
 
+#define UNUSED __attribute__((unused))
+
+#ifndef UNIT_TEST
+#define STATIC static
+#else
+#define STATIC
+#endif
+
 enum {
     GET,
     ADD,
