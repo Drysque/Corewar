@@ -1,7 +1,7 @@
-.name           "42"
+.name           "42Just a "
 .comment        "Just a basic Winner Program"
 
-entree:	live	%42		# entree
+entree:   live %42
 	ld	%0,r5
 	ld	%0,r5
 	zjmp	%:bite
@@ -65,14 +65,14 @@ p32deb:	zjmp	%0
 p32:	sub	r6,r4,r6
 	add	r6,r6,r11
 	ldi	%:p32deb,r6,r7
-	sti	r7,%-510,r11	
+	sti	r7,%-510,r11
 p32li:	live	%1
 	ld	%0,r10
 	sti	r7,%-250,r6
 	zjmp	%-192
 
 tirvd:	zjmp	%:tirvd2
-	
+
 bite:	sti     r1,%:copie,%2
         ldi     %:copie,%3,r2   # met le ld a l'entree
         sti     r2,%:entree,%-4
@@ -81,8 +81,8 @@ bite:	sti     r1,%:copie,%2
 
 	sti	r1,%:p32li,%1
 	sti	r1,%:b0,%1
-	
-	ld	%0,r2		
+
+	ld	%0,r2
 	ld	%8,r3		# prepare les fork
 	ld	%1,r4
 	ld	%0,r6
