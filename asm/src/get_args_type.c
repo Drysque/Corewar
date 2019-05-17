@@ -41,8 +41,11 @@ static void set_direct(char **instr_tab, op_list_t *new_op, op_t *op, int i)
     if (instr_tab[i][1] == LABEL_CHAR)
         add_need_label(&instr_tab[i][2], ADD, new_op->true_type[i],
             new_op->begin_offset);
-    else
+    else {
+        if (my_strlen(&instr_tab[i][1]) <= 0)
+            my_error("\n\t\e[1m\e[31mExpected value after direct\e[0m\n\n");
         new_op->args[i] = my_getnbr(&instr_tab[i][1]);
+    }
     offset_pos(new_op->true_type[i] == 0b10 ? DIR_SIZE : IND_SIZE, ADD);
 }
 
