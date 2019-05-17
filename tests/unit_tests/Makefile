@@ -51,7 +51,7 @@ clean:
 
 fclean: 		clean
 				make fclean -C ../../lib/my
-				@$(RM) ../..$(NAME)
+				@$(RM) ../../$(NAME)
 
 re: 			fclean all
 
