@@ -11,13 +11,11 @@
 static off_t fetch_offset(label_t *label_list, char *label)
 {
     while (label_list) {
-        if (my_strcmp(label_list->name, label)) {
+        if (my_strcmp(label_list->name, label))
             return label_list->offset;
-        }
         label_list = label_list->next_label;
     }
-    my_printf("\n\t\e[1m\e[31mUnknown label:\e[0m %s\n\n", label);
-    exit(84);
+    my_error_str("Unknown label:\e[0m %s", label);
     return 0;
 }
 

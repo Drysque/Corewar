@@ -29,10 +29,12 @@ static char *check_file(char const *file, int *fd)
 
     *fd = open(file, O_RDONLY);
     if (*fd < 0) {
-        my_printf("\n\t\e[1m\e[31mCould not open file file:\e[0m %s\n\n", file);
+        my_printf("\n\t\e[1m\e[31mCould not open file:\e[0m %s\n\n", file);
         return NULL;
     }
     dup = my_strdup(file);
+    if (dup == NULL)
+        my_error("Out of memory");
     for (size_t i = my_strlen(dup) - 1; i > 0; i--)
         if (dup[i] == '.') {
             dup[i] = '\0';

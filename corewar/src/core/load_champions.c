@@ -24,7 +24,7 @@ static void write_in_arena(unsigned char *arena, unsigned long address, int fd, 
     char buffer[size];
 
     if (read(fd, &buffer, size) < size)
-        my_error("\tInvalid prog_size\n");
+        my_error("Invalid prog_size");
     for (int i = 0; i < size; i += 1)
         arena[address + i] = buffer[i];
     close(fd);
@@ -38,12 +38,12 @@ int load_champions(environment_t *env)
 
     for (process_t *tail = PROC_HEAD(env); tail != NULL; tail = tail->next) {
         if (read(tail->fd, &tail->header, sizeof(header_t)) < (ssize_t)sizeof(header_t))
-            my_error("\n\tInvalid header size\n\n");
+            my_error("Invalid header size");
         tail->header.prog_size = get_no_endian(tail->header.prog_size, 4);
         if (tail->header.prog_size <= 0)
-            my_error("\n\tInvalid prog_size\n\n");
+            my_error("Invalid prog_size");
         if (get_no_endian(tail->header.magic, 4) != COREWAR_EXEC_MAGIC)
-            my_error("\n\tFile is not an executable\n\n");
+            my_error("File is not an executable");
         if (!tail->prog_number)
             tail->prog_number = prog_nb++;
         else

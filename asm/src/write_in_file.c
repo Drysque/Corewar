@@ -58,10 +58,8 @@ void write_in_file(header_t *header, label_t *label_list,
 {
     int fd = open(new_file, O_TRUNC | O_CREAT | O_RDWR, 00666);
 
-    if (fd < 0) {
-        my_printf("\e[1m\e[31m%s: couldn't create file\e[0m\n", new_file);
-        exit(84);
-    }
+    if (fd < 0)
+        my_error_str("%s: couldn't create file", new_file);
     // printf("total bytes actually written: \e[1m\e[32m%d\e[0m\n", lseek(fd, 0, SEEK_CUR));
     write(fd, header, sizeof(header_t));
     // printf("printing header\ntotal bytes actually written: \e[1m\e[32m%d\e[0m\n\n", lseek(fd, 0, SEEK_CUR));

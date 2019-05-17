@@ -36,6 +36,9 @@ void *my_calloc(size_t size);
 char *get_next_line(int fd);
 char **my_str_delim_array(char const *str, char const *delims);
 
-void my_error(const char *error);
+int line_counter(int status);
+
+void my_error(const char *error_fmt);
+void my_error_str(const char *error_fmt, const char *error_str);
 
 #endif /* MY_H_ */

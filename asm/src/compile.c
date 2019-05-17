@@ -15,9 +15,9 @@ static void check_info_redef(char *str)
 
     for (; str[index] && is_one_of_them(str[index], " \t"); index++);
     if (my_strncmp(&str[index], NAME_CMD_STRING, my_strlen(NAME_CMD_STRING)))
-        my_error("\n\t\e[1m\e[31mName can only be defined once\e[0m\n\n");
+        my_error("Name can only be defined once");
     if (my_strncmp(&str[index], comment_str, my_strlen(comment_str)))
-        my_error("\n\t\e[1m\e[31mComment can only be defined once\e[0m\n\n");
+        my_error("Comment can only be defined once");
 }
 
 void compile(int fd, char *new_file)
