@@ -26,7 +26,9 @@ char *my_strdup(char const *src);
 char *my_strndup(char const *src);
 char *my_strcat(char *buffer, char *str);
 
+bool my_str_isnum(char const *str);
 bool is_one_of_them(char c, char const *str);
+
 bool my_strcmp(char const *s1, char const *s2);
 bool my_strncmp(char const *s1, char const *s2, int n);
 int my_strcmp_diff(char const *s1, char const *s2);

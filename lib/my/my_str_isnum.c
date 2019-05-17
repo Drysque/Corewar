@@ -12,10 +12,10 @@ bool my_str_isnum(char const *str)
 {
     if (!str)
         return false;
-    if (!my_strlen(str))
+    if (my_strlen(str) <= 0)
         return false;
     for (int i = 0; str[i]; i++)
-        if (str[i] < '0' || str[i] > '9')
+        if ((str[i] < '0' || str[i] > '9') && str[i] != '-')
             return false;
     return true;
 }
