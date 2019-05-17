@@ -33,7 +33,6 @@ static void add_label(char *label_name, label_t **label_list)
     check_valid_label(label_name, *label_list);
     new_label->name = label_name;
     new_label->offset = offset_pos(0, GET);
-    // printf("(added label %s: %d)\n", new_label->name, new_label->offset);
     new_label->next_label = *label_list;
     *label_list = new_label;
 }

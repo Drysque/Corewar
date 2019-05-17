@@ -65,9 +65,6 @@ static void set_indirect(char **instr_tab, op_list_t *new_op, op_t *op, int i)
     offset_pos(IND_SIZE, ADD);
 }
 
-// printf("added offset of 1 for register\n");
-// printf("added offset of %d for dir/indir\n", new_op->true_type[i] == 2 ? 4 : 2);
-// printf("added offset of 2 for indirect\n");
 void get_args_type(op_list_t *new_op, char **instr_tab, op_t *op)
 {
     for (int i = 0; instr_tab[i]; i++) {

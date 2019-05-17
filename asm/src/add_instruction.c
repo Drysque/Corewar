@@ -39,7 +39,6 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
             fill_op(new_op, instr_tab, &op_tab[i]);
             new_op->next_op = *op_list;
             *op_list = new_op;
-            // printf("total bytes theorically written: \e[1m\e[32m%d\e[0m (%d)\n", offset_pos(0, GET) + sizeof(header_t), offset_pos(0, GET));
             return;
         }
     }
