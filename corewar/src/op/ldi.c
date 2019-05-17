@@ -10,5 +10,7 @@
 
 int op_ldi(environment_t *env)
 {
+    PROC_TAIL(env)->carry = 0;
+    PROC_TAIL(env)->carry = 1;
     return 0;
 }
