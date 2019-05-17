@@ -9,29 +9,28 @@
 #include "op.h"
 #include "my.h"
 
-static void my_memcpy(void *dest, void *src)
+void my_memcpy(void *dest, void *src, size_t size)
 {
-    for (int i = 0; i < sizeof(src); i += 1)
+    for (size_t i = 0; i < size; i += 1)
         ((char *)dest)[i] = ((char *)src)[i];
 }
 
 int op_fork(environment_t *env)
 {
     int offset = (PROC_TAIL(env)->address + PROC_TAIL(env)->pc) % MEM_SIZE;
-    int new_offset = (offset + (env->arena[offset + 1] << 8 | env->arena[offset + 2]) % IDX_MOD ) % MEM_SIZE;
-    void *tmp = NULL;
+    int new_offset = (((env->arena[(offset + 1) % MEM_SIZE] << 8) | (env->arena[(offset + 2) % MEM_SIZE])) % IDX_MOD) % MEM_SIZE;
+    process_t *tmp = NULL;
 
-    for (int i = 0; i < PROC_TAIL(env)->header.prog_size; i += 1)
-        env->arena[i + new_offset] = env->arena[i + PROC_TAIL(env)->address];
+    printf("WELCOME TO FORK\n");
     tmp = PROC_TAIL(env)->next;
     PROC_TAIL(env)->next = my_calloc(sizeof(process_t));
     if (!PROC_TAIL(env)->next)
         my_error("FATAL ERROR: Malloc failed\n");
-    PROC_TAIL(env)->next->address = new_offset;
-    PROC_TAIL(env)->cycles_to_die = env->cycle_to_die;
-    my_memcpy(&PROC_TAIL(env)->header, &PROC_TAIL(env)->next->header);
-    PROC_TAIL(env)->next->prog_number = rand() % 1024;
-    #warning "PROG NB"
+    my_memcpy(PROC_TAIL(env)->next, PROC_TAIL(env), sizeof(process_t));
+    PROC_TAIL(env)->next->pc = PROC_TAIL(env)->pc + new_offset;
+    if (PROC_TAIL(env)->next->pc < 0)
+        PROC_TAIL(env)->next->pc = 0;
+    printf("FORK SUCCEEDED TO %d\n", (PROC_TAIL(env)->pc + new_offset) % MEM_SIZE);
     PROC_TAIL(env)->next->next = tmp;
-    return 0;
+    return (3);
 }
