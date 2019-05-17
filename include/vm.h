@@ -25,7 +25,7 @@ typedef struct process_list_s {
     int cycles_to_die;                      // cycles left before death if no live instruction is called
     header_t header;                        // header of the binary
     int registers[REG_NUMBER];              // registers of the binary
-    unsigned int prog_number;               // actual programm number
+    int prog_number;                        // actual programm number
     unsigned long int address;              // address of the first programm instruction
     struct process_list_s *next;            // pointer to next process
 } process_t;
@@ -33,6 +33,7 @@ typedef struct process_list_s {
 /*                  VM structure                       */
 typedef struct environment_s {
     int nbr_cycle;                          // used with --dump to display memory
+    int last_player_alive;                  // last player to say live is wins
     int cycle_to_die;                       // global Cycle to die that will be updated
     unsigned int live_instruction_nb;       // global count of live instruction calls
     unsigned char arena[MEM_SIZE];          // equivalent of RAM memory
@@ -68,6 +69,9 @@ int get_instruction_size(environment_t *env);
 /// Main loop of the VM. It exec for each process currently alive, the current
 /// instruction and update pc, cycles_left, cycles_to_die if necessary.
 int run_vm(environment_t *env);
+
+process_t *get_list_index(process_t *head, int nb);
+void my_memcpy(void *dest, void *src, size_t size);
 
 /// gives the NBth bit pairs in a byte
 /// expl with byte = 10 10 11 01
