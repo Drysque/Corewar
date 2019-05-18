@@ -8,6 +8,7 @@
 #include "vm.h"
 #include "op.h"
 #include "my.h"
+#include "asm.h"
 
 void my_memcpy(void *dest, void *src, size_t size)
 {
@@ -18,10 +19,12 @@ void my_memcpy(void *dest, void *src, size_t size)
 int op_fork(environment_t *env)
 {
     int offset = (PROC_TAIL(env)->address + PROC_TAIL(env)->pc) % MEM_SIZE;
-    int new_offset = (((env->arena[(offset + 1) % MEM_SIZE] << 8) | (env->arena[(offset + 2) % MEM_SIZE])) % IDX_MOD) % MEM_SIZE;
+    int new_offset = (((env->arena[(offset + 1) % MEM_SIZE] << 8) |
+    (env->arena[(offset + 2) % MEM_SIZE])) % IDX_MOD) % MEM_SIZE;
     process_t *tmp = NULL;
 
-    printf("WELCOME TO FORK\n");
+    if (INSTRUCTION(env) != 0x0c)
+        return (OP_ERROR);
     tmp = PROC_TAIL(env)->next;
     PROC_TAIL(env)->next = my_calloc(sizeof(process_t));
     if (!PROC_TAIL(env)->next)
@@ -30,7 +33,6 @@ int op_fork(environment_t *env)
     PROC_TAIL(env)->next->pc = PROC_TAIL(env)->pc + new_offset;
     if (PROC_TAIL(env)->next->pc < 0)
         PROC_TAIL(env)->next->pc = 0;
-    printf("FORK SUCCEEDED TO %d\n", (PROC_TAIL(env)->pc + new_offset) % MEM_SIZE);
     PROC_TAIL(env)->next->next = tmp;
     return (3);
 }

@@ -19,7 +19,7 @@ static void display_help(void)
     my_printf("\t(if the round isn’t\n\talready over) with the"
     "following format : 32 bytes / line in\n\thexadecimal(A0BCDEFE1DD3...)\n");
     my_printf("\n\t-n prog_numbersets the next program’s number."
-    "By default,the first free number\n\tin the parameter order\n");
+    "By default, the first free number\n\tin the parameter order\n");
     my_printf("\n\t-a load_addresssets the next program’s loading address."
     "When no address is\n\tspecified, optimize the addresses so that the "
     "processes are as far\n\taway from each other as possible.The addresses"
@@ -29,24 +29,19 @@ static void display_help(void)
 int main(int argc, char **argv)
 {
     environment_t *env = NULL;
-    int lol = 0b10 | 0b01 | 0b11 | 0b01;
 
     if (argc == 1) {
-        my_printf("Usage: ./corewar [-g] [-dump cycle_nb] [[-a load_addr] [-n prog_nb] prog.cor] ...\n");
+        my_printf("Usage: ./corewar [-g] [-dump cycle_nb] [[-a load_addr]"
+        " [-n prog_nb] prog.cor] ...\n");
         return (84);
     }
-    if (argc == 2 && my_strcmp("-h", argv[1]) == true) {
+    if (argc == 2 && my_strcmp("-h", argv[1])) {
         display_help();
         return (0);
     }
     env = read_parameters(argc, argv);
-    int a = 0b10 << 6 | 0b11 << 4 | 0b01 << 2 | 0b00;
     if (env == NULL)
         return (ERROR);
-    printf("%d\n", GET_BITS(a, 0));
-    printf("%d\n", GET_BITS(a, 1));
-    printf("%d\n", GET_BITS(a, 2));
-    printf("%d\n", GET_BITS(a, 3));
     if (load_champions(env) == ERROR)
         return (ERROR);
     if (run_vm(env) == ERROR)

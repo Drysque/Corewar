@@ -9,11 +9,10 @@
 #include "vm.h"
 #include "my.h"
 
-static int add_to_current_process(environment_t *env, char **argv,
+static int add_to_current_process(environment_t *env,
 bool in_process)
 {
     bool created = false;
-    (void)argv;
 
     if (PROC_HEAD(env) == NULL) {
         PROC_HEAD(env) = my_calloc(sizeof(process_t));
@@ -36,10 +35,24 @@ bool in_process)
     return (0);
 }
 
+static void load_file(char **argv, environment_t *env,
+int *index, bool *in_process)
+{
+    if (my_strcmp(argv[*index - 1], "-dump"))
+        return (ERROR);
+    PROC_TAIL(env)->fd = open(argv[*index], O_RDONLY);
+    if (PROC_TAIL(env)->fd == -1) {
+        free(PROC_TAIL(env));
+        PROC_TAIL(env) = NULL;
+        for (process_t *tail = PROC_HEAD(env); tail != NULL; tail = tail->next)
+            PROC_TAIL(env) = tail;
+    }
+    *in_process = false;
+}
+
 static int get_flag(char **argv, environment_t *env,
 int *index, bool *in_process)
 {
-    printf("[%s:%d] => %s\n", __FILE__, __LINE__, argv[*index]);
     if (argv[*index] == NULL)
         return (ERROR);
     if (my_strcmp(argv[*index], "-a")) {
@@ -58,19 +71,7 @@ int *index, bool *in_process)
         *in_process = true;
         return (PROC_TAIL(env)->prog_number <= 0 ? ERROR : 0);
     }
-    if (my_strcmp(argv[*index - 1], "-dump"))
-        return (ERROR);
-    printf("FILE NAME: %s\n", argv[*index]);
-    PROC_TAIL(env)->fd = open(argv[*index], O_RDONLY);
-    if (PROC_TAIL(env)->fd == -1) {
-        printf("ERROR while loading champion %s\n", argv[*index]);
-        free(PROC_TAIL(env));
-        PROC_TAIL(env) = NULL;
-        for (process_t *tail = PROC_HEAD(env); tail != NULL; tail = tail->next)
-            PROC_TAIL(env) = tail;
-    }
-    printf("END OF PROCESS\n");
-    *in_process = false;
+    load_file(argv, env, index, in_process);
     return (0);
 }
 
@@ -96,12 +97,9 @@ environment_t *read_parameters(int argc, char **argv)
     bool in_process = true;
     int index = 1;
 
-    new = malloc(sizeof(environment_t));
-    new->processes_tail = NULL;
-    new->processes_head = NULL;
-    if ((index <= argc && new == NULL) || check_parameters_validity(argc, argv))
+    if ((index <= argc && new == NULL) ||
+    check_parameters_validity(argc, argv))
         return (NULL);
-    printf("lol");
     if (my_strcmp(argv[index], "-dump") && index + 2 <= argc) {
         if (my_getnbr(argv[index + 1]) <= 0)
             return (NULL);
@@ -109,19 +107,11 @@ environment_t *read_parameters(int argc, char **argv)
         index += 2;
     }
     while (index < argc) {
-        if (add_to_current_process(new, argv, in_process) == ERROR)
+        if (add_to_current_process(new, in_process) == ERROR)
             return (NULL);
         if (get_flag(argv, new, &index, &in_process) == ERROR)
             return (NULL);
         index += 1;
-    }
-    printf("\n-dump NBR_CYCLE: %d\n", new->nbr_cycle);
-    if (new->processes_tail != NULL) {
-        for (process_t *tail = PROC_HEAD(new); tail != NULL; tail = tail->next) {
-            printf("========================================================\n");
-            printf("-n PROG_NBR: %d\n", tail->prog_number);
-            printf("-a PROG_ADDR: %ld\n", tail->address);
-        }
     }
     return (new);
 }

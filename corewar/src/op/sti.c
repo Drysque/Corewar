@@ -16,12 +16,13 @@ int op_sti(environment_t *env)
     int new_offset = 0;
 
     if (INSTRUCTION(env) != 0x0b || GET_BITS(coding_byte, 3) != 0b01
-    || GET_BITS(coding_byte, 0) != 0b00 || GET_BITS(coding_byte, 1) == 0b00 ||
-    GET_BITS(coding_byte, 2) == 0b00)
+    || GET_BITS(coding_byte, 0) != 0b00 || GET_BITS(coding_byte, 1)
+    == 0b00 || GET_BITS(coding_byte, 2) == 0b00)
         return (OP_ERROR);
     index = get_arg(env, 1);
     new_offset = (get_arg(env, 2) + get_arg(env, 3)) % IDX_MOD;
-    env->arena[(offset + new_offset) % MEM_SIZE] = GET_BITS(PROC_TAIL(env)->registers[index], 3);
+    env->arena[(offset + new_offset) % MEM_SIZE] =
+    GET_BITS(PROC_TAIL(env)->registers[index], 3);
     env->arena[(offset + new_offset + 1) % MEM_SIZE] =
     GET_BITS(PROC_TAIL(env)->registers[index], 2);
     env->arena[(offset + new_offset + 2) % MEM_SIZE] =

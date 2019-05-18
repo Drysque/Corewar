@@ -19,14 +19,12 @@ process_t *get_list_index(process_t *head, int nb)
     return (NULL);
 }
 
-///tous les NBR_LIVE fois que live est call, CYCLE_TO_DIE -= CYCLE_DELTA
 int op_live(environment_t *env)
 {
     int offset = PROC_TAIL(env)->address + PROC_TAIL(env)->pc;
     int value = 0;
     process_t *ptr = NULL;
 
-    printf("\nENTERING LIVE\n");
     if (GET_BITS(env->arena[offset + 1], 0) ||
         GET_BITS(env->arena[offset + 1], 1) ||
         GET_BITS(env->arena[offset + 1], 2))
@@ -34,16 +32,13 @@ int op_live(environment_t *env)
     value = env->arena[offset + 1] << 24 | env->arena[offset + 2] << 16
         | env->arena[offset + 3] << 8 | env->arena[offset + 4];
     ptr = get_list_index(PROC_HEAD(env), value);
-    if (ptr)
-        my_printf("The player %d (%s)is alive\n", value, ptr->header.prog_name);
-    else
+    if (!ptr)
         return (OP_ERROR);
+    my_printf("The player %d (%s)is alive\n", value, ptr->header.prog_name);
     PROC_TAIL(env)->cycles_to_die = env->cycle_to_die;
     env->live_instruction_nb += 1;
     env->last_player_alive = ptr->prog_number;
-    if (env->live_instruction_nb >= NBR_LIVE) {
+    if (env->live_instruction_nb >= NBR_LIVE)
         env->cycle_to_die -= CYCLE_DELTA;
-        // printf("La sentence est irrévoquable, to_die: %d\n", env->cycle_to_die);
-    }
     return (1 + DIR_SIZE);
 }
