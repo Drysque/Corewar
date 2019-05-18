@@ -8,7 +8,6 @@
 #include "my.h"
 #include "vm.h"
 
-
 static void display_help(void)
 {
     my_printf("USAGE\n");
@@ -27,12 +26,15 @@ static void display_help(void)
     "are MEM_SIZE modulo.\n");
 }
 
-
 int main(int argc, char **argv)
 {
     environment_t *env = NULL;
     int lol = 0b10 | 0b01 | 0b11 | 0b01;
 
+    if (argc == 1) {
+        my_printf("Usage: ./corewar [-g] [-dump cycle_nb] [[-a load_addr] [-n prog_nb] prog.cor] ...\n");
+        return (84);
+    }
     if (argc == 2 && my_strcmp("-h", argv[1]) == true) {
         display_help();
         return (0);

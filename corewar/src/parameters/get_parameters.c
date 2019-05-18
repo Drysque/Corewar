@@ -79,7 +79,8 @@ int check_parameters_validity(int argc, char **argv)
     int params_only = 1;
 
     for (int i = 0; argv[i]; i++) {
-        if ((argv[i][0] == '-') && (!my_strcmp(argv[i], "-n") && !my_strcmp(argv[i], "-a") && !my_strcmp(argv[i], "-dump")))
+        if ((argv[i][0] == '-') && (!my_strcmp(argv[i], "-n") &&
+        !my_strcmp(argv[i], "-a") && !my_strcmp(argv[i], "-dump")))
             return (1);
         if (argv[i][0] != '-')
             params_only = 0;
