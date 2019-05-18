@@ -35,7 +35,7 @@ bool in_process)
     return (0);
 }
 
-static void load_file(char **argv, environment_t *env,
+static int load_file(char **argv, environment_t *env,
 int *index, bool *in_process)
 {
     if (my_strcmp(argv[*index - 1], "-dump"))
@@ -48,6 +48,7 @@ int *index, bool *in_process)
             PROC_TAIL(env) = tail;
     }
     *in_process = false;
+    return (0);
 }
 
 static int get_flag(char **argv, environment_t *env,
@@ -71,11 +72,10 @@ int *index, bool *in_process)
         *in_process = true;
         return (PROC_TAIL(env)->prog_number <= 0 ? ERROR : 0);
     }
-    load_file(argv, env, index, in_process);
-    return (0);
+    return (load_file(argv, env, index, in_process));
 }
 
-int check_parameters_validity(int argc, char **argv)
+int check_parameters_validity(char **argv)
 {
     int params_only = 1;
 
@@ -98,7 +98,7 @@ environment_t *read_parameters(int argc, char **argv)
     int index = 1;
 
     if ((index <= argc && new == NULL) ||
-    check_parameters_validity(argc, argv))
+    check_parameters_validity(argv))
         return (NULL);
     if (my_strcmp(argv[index], "-dump") && index + 2 <= argc) {
         if (my_getnbr(argv[index + 1]) <= 0)
