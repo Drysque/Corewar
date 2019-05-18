@@ -20,11 +20,8 @@ static void check_valid_label(char *label_name, label_t *label_list)
             exit(84);
         }
     while (label_list) {
-        if (my_strcmp(label_list->name, label_name)) {
-            my_printf("\n\t\e[1m\e[31mLabel already defined:\e[0m %s\n\n",
-                label_name);
-            exit(84);
-        }
+        if (my_strcmp(label_list->name, label_name))
+            my_error_str("Label already defined:\e[0m %s", label_name);
         label_list = label_list->next_label;
     }
 }
@@ -36,7 +33,6 @@ static void add_label(char *label_name, label_t **label_list)
     check_valid_label(label_name, *label_list);
     new_label->name = label_name;
     new_label->offset = offset_pos(0, GET);
-    // printf("(added label %s: %d)\n", new_label->name, new_label->offset);
     new_label->next_label = *label_list;
     *label_list = new_label;
 }

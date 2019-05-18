@@ -8,14 +8,22 @@
 #include "vm.h"
 #include "op.h"
 
-int op_sub(unsigned char *arena, process_t *proc)
+int op_sub(environment_t *env)
 {
-    int index = INDEX(arena, proc);
-    char coding_byte = (arena[(proc->address + proc->pc + 1) % MEM_SIZE]);
+    int index = INSTRUCTION(env);
+    char coding_byte = (env->arena[(PROC_TAIL(env)->address +
+    PROC_TAIL(env)->pc + 1) % MEM_SIZE]);
 
-    if (index != 0x05 || coding_byte !=
+    printf("\nWELCOME TO SUB INSTRUCTION\n");
+    PROC_TAIL(env)->carry = 0;
+    if (index != 0x04 || coding_byte !=
     (0b01 << 6 | 0b01 << 4 | 0b01 << 2 | 0b00))
-        return (1);
-    proc->registers[(proc->address + proc->pc + 4) % MEM_SIZE][0] =
-    (proc->address + proc->pc + 2) - (proc->address + proc->pc + 3);
+        return (OP_ERROR);
+    PROC_TAIL(env)->registers[env->arena[(PROC_TAIL(env)->address +
+    PROC_TAIL(env)->pc + 4) % MEM_SIZE] % REG_NUMBER] =
+    PROC_TAIL(env)->registers[env->arena[(PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 2) % MEM_SIZE] % REG_NUMBER] -
+    PROC_TAIL(env)->registers[env->arena[(PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 3) % MEM_SIZE] % REG_NUMBER];
+    PROC_TAIL(env)->carry = 1;
+    printf("r%d = r%d + r%d\n\n", env->arena[(PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 4) % MEM_SIZE], env->arena[(PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 2) % REG_NUMBER], env->arena[(PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 3) % REG_NUMBER]);
+    return (5);
 }

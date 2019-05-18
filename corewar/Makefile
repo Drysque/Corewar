@@ -31,7 +31,7 @@ SRC			=	$(SRCDIR)/main.c							\
 				$(SRCDIR)/op/xor.c								\
 				$(SRCDIR)/op/zjmp.c								\
 				$(SRCDIR)/op/ldi.c								\
-				$(SRCDIR)/op/sdi.c								\
+				$(SRCDIR)/op/sti.c								\
 				$(SRCDIR)/op/fork.c								\
 				$(SRCDIR)/op/lld.c								\
 				$(SRCDIR)/op/lldi.c								\

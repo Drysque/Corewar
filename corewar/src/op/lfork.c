@@ -7,8 +7,23 @@
 
 #include "vm.h"
 #include "op.h"
+#include "my.h"
 
-int op_lfork(unsigned char *arena, process_t *tail)
+int op_lfork(environment_t *env)
 {
-    return 0;
+    int offset = (PROC_TAIL(env)->address + PROC_TAIL(env)->pc) % MEM_SIZE;
+    int new_offset = ((env->arena[offset + 1] << 8 | env->arena[offset + 2])) % MEM_SIZE;
+    process_t *tmp = NULL;
+
+    printf("WELCOME TO LFORK\n");
+    tmp = PROC_TAIL(env)->next;
+    PROC_TAIL(env)->next = my_calloc(sizeof(process_t));
+    if (!PROC_TAIL(env)->next)
+        my_error("FATAL ERROR: Malloc failed\n");
+    my_memcpy(PROC_TAIL(env)->next, PROC_TAIL(env), sizeof(process_t));
+    PROC_TAIL(env)->next->pc = PROC_TAIL(env)->pc + new_offset;
+    if (PROC_TAIL(env)->next->pc < 0)
+        PROC_TAIL(env)->next->pc = 0;
+    PROC_TAIL(env)->next->next = tmp;
+    return (3);
 }

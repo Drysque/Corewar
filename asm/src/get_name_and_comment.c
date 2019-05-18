@@ -9,19 +9,20 @@
 #include "my.h"
 
 static const char *ERRORS_NAME[] = {
-    "\n\t\e[1m\e[31mName is empty\e[0m\n\n",
-    "\n\t\e[1m\e[31mThe name must be the first line of the program\e[0m\n\n",
-    "\n\t\e[1m\e[31mThe program name is too long\e[0m\n\n"};
+    "Name is empty",
+    "The name must be the first line of the program",
+    "The program name is too long"};
 static const char *ERRORS_COMMENT[] = {
-    "\n\t\e[1m\e[31mComment is empty\e[0m\n\n",
+    "Comment is empty",
     "\n\t\e[1m\e[31mWarning:\e[0m No comment is specified\n\n",
-    "\n\t\e[1m\e[31mThe comment is too long\e[0m\n\n"};
+    "The comment is too long"};
 
 static void check_nothing_else(char *str)
 {
-    for (int i = 0; str[i]; i++)
+    for (int i = 0; str[i] && str[i] != COMMENT_CHAR; i++)
         if (is_one_of_them(str[i], " \t") == false) {
-            my_printf("\n\t\e[1m\e[31mSyntax error:\e[0m \e[5m%c\e[0m unexpected after quotes\n\n", str[i]);
+            my_printf("\n\tline %d: \e[1m\e[31mSyntax error:\e[0m \e[5m%c\e[0m "
+                "unexpected after quotes\n\n", line_counter(GET), str[i]);
             exit(84);
         }
 }
@@ -35,12 +36,9 @@ static void remove_quotes(char *str)
                 check_nothing_else(&str[i + 1]);
                 return;
             }
-    } else {
-        my_error("\n\t\e[1m\e[31mSyntax error:\e[0m expected opening "
-            "'\e[5m\"\e[0m'\n\n");
-    }
-    my_error("\n\t\e[1m\e[31mSyntax error:\e[0m expected closing "
-        "'\e[5m\"\e[0m'\n\n");
+    } else
+        my_error("Syntax error:\e[0m expected opening '\e[5m\"\e[0m'");
+    my_error("Syntax error:\e[0m expected closing '\e[5m\"\e[0m'");
 }
 
 static void get_name(int fd, char *to_write)
@@ -50,7 +48,7 @@ static void get_name(int fd, char *to_write)
     int len = my_strlen(NAME_CMD_STRING);
 
     if (str == NULL)
-        my_error("\n\t\e[1m\e[97m\e[101m\e[5mFile is empty\e[0m\n\n");
+        my_error("File is empty");
     for (; str[index] && is_one_of_them(str[index], " \t"); index++);
     if (my_strncmp(&str[index], NAME_CMD_STRING, len)) {
         index += len;

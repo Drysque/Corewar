@@ -16,13 +16,13 @@ bool in_process)
     (void)argv;
 
     if (PROC_HEAD(env) == NULL) {
-        PROC_HEAD(env) = malloc(sizeof(process_t));
+        PROC_HEAD(env) = my_calloc(sizeof(process_t));
         if (PROC_HEAD(env) == NULL)
             return (ERROR);
         PROC_TAIL(env) = PROC_HEAD(env);
         created = true;
     } else if (!in_process) {
-        PROC_TAIL(env)->next = malloc(sizeof(process_t));
+        PROC_TAIL(env)->next = my_calloc(sizeof(process_t));
         if (PROC_TAIL(env)->next == NULL)
             return (ERROR);
         PROC_TAIL(env) = PROC_TAIL(env)->next;
@@ -92,7 +92,7 @@ int check_parameters_validity(int argc, char **argv)
 
 environment_t *read_parameters(int argc, char **argv)
 {
-    environment_t *new = NULL;
+    environment_t *new = my_calloc(sizeof(environment_t));
     bool in_process = true;
     int index = 1;
 
