@@ -21,6 +21,7 @@ SRC			=	$(SRCDIR)/main.c							\
 				$(SRCDIR)/parameters/get_parameters.c		\
 				$(SRCDIR)/core/load_champions.c				\
 				$(SRCDIR)/core/run_vm.c						\
+				$(SRCDIR)/core/dump.c						\
 				$(SRCDIR)/op/live.c								\
 				$(SRCDIR)/op/ld.c								\
 				$(SRCDIR)/op/st.c								\
