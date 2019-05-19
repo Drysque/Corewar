@@ -102,11 +102,3 @@ Test(testing_asm, test_output_1, .init = redirect_all_std)
     cr_assert_stdout_eq_str(hexdump);
     system("rm -fr U_test.cor");
 }
-
-Test(testing_asm, test_output_2, .init = redirect_all_std)
-{
-    // compile(open("./tests/bad_instruction.s", O_RDONLY), "U_test_2.cor");
-    // system("hexdump U_test.cor");
-    // cr_assert_stdout_eq_str(hexdump);
-    // system("rm -fr U_test.cor");
-}
