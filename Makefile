@@ -9,13 +9,29 @@ SHELL		=	sh
 
 MAKE		=	make
 
+RM			=	rm -r
+
 COMPILERDIR	=	./asm
 
 VMDIR		=	./corewar
 
-LIBDIR		=	./lib/my
+LIBDIR		=	./lib/my/
 
 TESTDIR		=	./tests/unit_tests
+
+TESTSRC		=	$(TESTDIR)/asm_tests.c						\
+				./include/op.c								\
+				$(COMPILERDIR)/src/compile.c				\
+				$(COMPILERDIR)/src/get_name_and_comment.c	\
+				$(COMPILERDIR)/src/get_next_instruction.c	\
+				$(COMPILERDIR)/src/write_in_file.c			\
+				$(COMPILERDIR)/src/get_no_endian.c			\
+				$(COMPILERDIR)/src/fill_needed_label.c		\
+				$(COMPILERDIR)/src/get_args_type.c			\
+				$(COMPILERDIR)/src/offset_manage.c			\
+				$(COMPILERDIR)/src/parse_instruction.c		\
+				$(COMPILERDIR)/src/add_instruction.c		\
+				$(COMPILERDIR)/src/add_needed_label.c		\
 
 all:
 			$(MAKE) -C $(LIBDIR)
@@ -31,17 +47,19 @@ clean:
 			$(MAKE) clean -C $(LIBDIR)
 			$(MAKE) clean -C $(COMPILERDIR)
 			$(MAKE) clean -C $(VMDIR)
-			$(MAKE) clean -C $(TESTDIR)
 
-fclean:
+fclean:		clean
 			$(MAKE) fclean -C $(LIBDIR)
 			$(MAKE) fclean -C $(COMPILERDIR)
 			$(MAKE) fclean -C $(VMDIR)
-			$(MAKE) fclean -C $(TESTDIR)
+			@$(RM) *.gc*
+			@$(RM) ./unit_tests
 
 tests_run:
-			$(MAKE) tests_run -C $(TESTDIR)
-			./unit_test
+			$(MAKE) -C $(LIBDIR)
+			$(CC) -o unit_tests $(TESTSRC) -iquote./include/ -L$(LIBDIR)\
+				-lmy -lcriterion --coverage
+			./unit_tests
 
 re: fclean all
 
