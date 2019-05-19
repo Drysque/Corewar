@@ -17,7 +17,7 @@ int op_add(environment_t *env)
     int arg3 = 0;
 
     PROC_TAIL(env)->carry = 0;
-    if (INSTRUCTION(env) != 0x08 || GET_BITS(coding_byte, 0) != 0b00 ||
+    if (INSTRUCTION(env) != 0x04 || GET_BITS(coding_byte, 0) != 0b00 ||
     GET_BITS(coding_byte, 1) != 0b01)
         return (OP_ERROR);
     arg1 = get_arg(env, 1);
