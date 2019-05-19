@@ -5,7 +5,6 @@
 ** get all arguments given to the virtual machine
 */
 
-#include <stdio.h>
 #include "vm.h"
 #include "my.h"
 
