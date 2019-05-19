@@ -31,7 +31,7 @@ typedef struct process_list_s {
     // header of the binary
     header_t header;
     // registers of the binary
-    int registers[REG_NUMBER];
+    int registers[REG_NUMBER + 1];
     // actual programm number
     int prog_number;
     // address of the first programm instruction
