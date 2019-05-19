@@ -9,7 +9,7 @@ SHELL		=	sh
 
 MAKE		=	make
 
-RM			=	rm -r
+RM			=	rm -f
 
 COMPILERDIR	=	./asm
 
