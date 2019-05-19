@@ -38,7 +38,8 @@ static void spawn_champions(environment_t *env)
     division = (int)(MEM_SIZE / get_list_len(env->processes_head));
     for (process_t *tail = PROC_HEAD(env);
     tail != NULL; tail = tail->next) {
-        tail->address = offset;
+        if (!tail->address)
+            tail->address = offset;
         if (tail->address + division <
         tail->address + tail->header.prog_size)
             offset = tail->address + tail->header.prog_size;
