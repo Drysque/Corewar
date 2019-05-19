@@ -100,7 +100,8 @@ void my_memcpy(void *dest, void *src, size_t size);
 
 /// gives the current instruction mnemonique (ex: 0x01 if live is
 /// the current instruction)
-#define INSTRUCTION(env) (env->arena[(env->processes_tail->address + env->processes_tail->pc) % MEM_SIZE])
+#define OFFSET(env) (env->processes_tail->address + env->processes_tail->pc)
+#define INSTRUCTION(env) (env->arena[OFFSET(env) % MEM_SIZE])
 
 /*                  INSTRUCTIONS                    */
 // all operations return the offset by which the programm pc is incremented
