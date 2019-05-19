@@ -12,10 +12,11 @@
 int op_zjmp(environment_t *env)
 {
     int offset = PROC_TAIL(env)->address + PROC_TAIL(env)->pc;
-    int nb = (env->arena[offset + 1] << 8 | env->arena[offset + 2]);
+    short nb = (env->arena[(offset + 1) % MEM_SIZE] << 8 |
+    env->arena[(offset + 2) % MEM_SIZE]);
 
     if (INSTRUCTION(env) != 0x09 || PROC_TAIL(env)->carry != 1)
         return (OP_ERROR);
     PROC_TAIL(env)->pc += (nb % IDX_MOD);
-    return (nb < 3 ? 3 - nb : 0);
+    return (0);
 }

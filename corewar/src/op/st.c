@@ -12,7 +12,7 @@ int op_st(environment_t *env)
 {
     int offset = PROC_TAIL(env)->address + PROC_TAIL(env)->pc;
     char coding_byte = env->arena[(offset + 1) % MEM_SIZE];
-    char reg = env->arena[(offset + 2) % MEM_SIZE] % REG_NUMBER;
+    int reg = env->arena[(offset + 2) % MEM_SIZE] % REG_NUMBER;
 
     if (INSTRUCTION(env) != 0x03 || GET_BITS(coding_byte, 3) != 0b01 ||
     GET_BITS(coding_byte, 1) != 0b00 || GET_BITS(coding_byte, 0) != 0b00)

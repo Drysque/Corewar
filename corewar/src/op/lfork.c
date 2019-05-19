@@ -14,7 +14,7 @@ int op_lfork(environment_t *env)
 {
     int offset = (PROC_TAIL(env)->address + PROC_TAIL(env)->pc) % MEM_SIZE;
     process_t *tmp = NULL;
-    int new_offset = 0;
+    short new_offset = 0;
 
     new_offset = ((env->arena[offset + 1] << 8 |
     env->arena[offset + 2]) % MEM_SIZE);

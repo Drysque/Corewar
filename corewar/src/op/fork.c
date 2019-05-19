@@ -19,7 +19,7 @@ void my_memcpy(void *dest, void *src, size_t size)
 int op_fork(environment_t *env)
 {
     int offset = (PROC_TAIL(env)->address + PROC_TAIL(env)->pc) % MEM_SIZE;
-    int new_offset = (((env->arena[(offset + 1) % MEM_SIZE] << 8) |
+    short new_offset = (((env->arena[(offset + 1) % MEM_SIZE] << 8) |
     (env->arena[(offset + 2) % MEM_SIZE])) % IDX_MOD) % MEM_SIZE;
     process_t *tmp = NULL;
 
