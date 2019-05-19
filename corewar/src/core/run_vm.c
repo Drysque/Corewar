@@ -9,7 +9,7 @@
 #include "op.h"
 #include "my.h"
 
-void init_processes(environment_t *env)
+static void init_processes(environment_t *env)
 {
     for (process_t *tail = PROC_HEAD(env); tail; tail = tail->next) {
         tail->cycles_left = op_tab[INSTRUCTION(env) % 16].nbr_cycles;
@@ -20,7 +20,7 @@ void init_processes(environment_t *env)
     }
 }
 
-int run_instruction(environment_t *env)
+static int run_instruction(environment_t *env)
 {
     static int (*inst_tab[])(environment_t *env) =
     {&op_live, &op_ld, &op_st, &op_add, &op_sub,
@@ -34,8 +34,9 @@ int run_instruction(environment_t *env)
     return (inst_tab[index](env));
 }
 
-void check_cycles(environment_t *env)
+static void check_cycles(environment_t *env)
 {
+
     if (PROC_TAIL(env)->cycles_to_die <= 0)
         return;
     PROC_TAIL(env)->cycles_to_die -= 1;
@@ -51,7 +52,7 @@ void check_cycles(environment_t *env)
         PROC_TAIL(env)->cycles_left -= 1;
 }
 
-bool check_end(environment_t *env)
+static bool check_end(environment_t *env)
 {
     int alive = 0;
 
@@ -63,6 +64,8 @@ bool check_end(environment_t *env)
 
 int run_vm(environment_t *env)
 {
+    int cycles = env->nbr_cycle;
+
     PROC_TAIL(env) = PROC_HEAD(env);
     env->cycle_to_die = CYCLE_TO_DIE;
     init_processes(env);
@@ -72,6 +75,10 @@ int run_vm(environment_t *env)
             PROC_TAIL(env) = PROC_TAIL(env)->next;
         }
         PROC_TAIL(env) = PROC_HEAD(env);
+        if (cycles-- < 0 && env->nbr_cycle != 0) {
+            dump_arena(env->arena);
+            cycles = env->nbr_cycle;
+        }
     }
     my_printf("The player %d(%s) has won.\n", env->last_player_alive,
     get_list_index(PROC_HEAD(env), env->last_player_alive)->header
