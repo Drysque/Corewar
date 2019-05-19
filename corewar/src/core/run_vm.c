@@ -68,7 +68,7 @@ int run_vm(environment_t *env)
     PROC_TAIL(env) = PROC_HEAD(env);
     env->cycle_to_die = CYCLE_TO_DIE;
     init_processes(env);
-    while (check_end(env)) {
+    while (check_end(env) && env->cycle_to_die > 0) {
         while (PROC_TAIL(env) && env->cycle_to_die > 0) {
             check_cycles(env);
             PROC_TAIL(env) = PROC_TAIL(env)->next;

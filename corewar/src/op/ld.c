@@ -21,7 +21,7 @@ int op_ld(environment_t *env)
         GET_BITS(env->arena[offset + 1], 0) ||
         GET_BITS(env->arena[offset + 1], 2) != 0b01)
         return OP_ERROR;
-    r = get_arg(env, 2);
+    r = get_arg(env, 2) % REG_NUMBER;
         arg = get_arg(env, 1) % IDX_MOD;
     if (GET_BITS(env->arena[offset + 1], 3) == 0b11)
         PROC_TAIL(env)->registers[r] = env->arena[(offset + arg) % MEM_SIZE];

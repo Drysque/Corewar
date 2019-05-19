@@ -19,8 +19,8 @@ void my_memcpy(void *dest, void *src, size_t size)
 int op_fork(environment_t *env)
 {
     int offset = (PROC_TAIL(env)->address + PROC_TAIL(env)->pc) % MEM_SIZE;
-    short new_offset = (((env->arena[(offset + 1) % MEM_SIZE] << 8) |
-    (env->arena[(offset + 2) % MEM_SIZE])) % IDX_MOD) % MEM_SIZE;
+    short new_offset = ((env->arena[offset + 1] << 8 |
+    env->arena[offset + 2]));
     process_t *tmp = NULL;
 
     if (INSTRUCTION(env) != 0x0c)
@@ -30,9 +30,10 @@ int op_fork(environment_t *env)
     if (!PROC_TAIL(env)->next)
         my_error("FATAL ERROR: Malloc failed\n");
     my_memcpy(PROC_TAIL(env)->next, PROC_TAIL(env), sizeof(process_t));
-    PROC_TAIL(env)->next->pc = PROC_TAIL(env)->pc + new_offset;
+    PROC_TAIL(env)->next->pc = PROC_TAIL(env)->pc + new_offset % IDX_MOD;
     if (PROC_TAIL(env)->next->pc < 0)
-        PROC_TAIL(env)->next->pc = 0;
+        PROC_TAIL(env)->next->pc *= -1;
+    PROC_TAIL(env)->next->pc %= MEM_SIZE;
     PROC_TAIL(env)->next->next = tmp;
     return (3);
 }
