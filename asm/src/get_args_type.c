@@ -8,7 +8,8 @@
 #include "asm.h"
 #include "my.h"
 
-static const char NO_DIRECT_SIZE[] = {0x05, 0x09, 0x0a, 0x0b, 0x0c, 0x0f, 0x0};
+static const char NO_DIRECT_SIZE[] = {0x05, 0x09, 0x0a, 0x0b, 0x0c,
+                                        0x0e, 0x0f, 0x0};
 
 static void set_register(char **instr_tab, op_list_t *new_op, op_t *op, int i)
 {
