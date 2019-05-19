@@ -14,7 +14,7 @@ static void init_processes(environment_t *env)
     for (process_t *tail = PROC_HEAD(env); tail; tail = tail->next) {
         tail->cycles_left = op_tab[INSTRUCTION(env) % 16].nbr_cycles;
         tail->cycles_to_die = env->cycle_to_die;
-        tail->registers[0] = tail->prog_number;
+        tail->registers[1] = tail->prog_number;
         tail->pc = 0;
         tail->carry = 0;
     }
