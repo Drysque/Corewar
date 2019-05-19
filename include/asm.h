@@ -14,14 +14,6 @@
 #include <stdbool.h>
 #include "op.h"
 
-#define UNUSED __attribute__((unused))
-
-#ifndef UNIT_TEST
-#define STATIC static
-#else
-#define STATIC
-#endif
-
 enum {
     GET,
     ADD,
@@ -59,6 +51,8 @@ void fill_needed_label(int fd, label_t *label_list);
 char *get_name_and_comment(int fd, header_t *header);
 void get_args_type(op_list_t *new_op, char **instr_tab, op_t *op);
 void add_instruction(char **instruction_tab, op_list_t **op_list);
+void free_all(header_t *header, label_t *label_list,
+    op_list_t *op_list);
 void write_in_file(header_t *header, label_t *label_list,
     op_list_t *op_list, char *new_file);
 void parse_instruction(char *instruction, label_t **label_list,

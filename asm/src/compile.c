@@ -56,4 +56,5 @@ void compile(int fd, char *new_file)
     }
     check_label_nodef(label_list);
     write_in_file(header, label_list, op_list, new_file);
+    free_all(header, label_list, op_list);
 }

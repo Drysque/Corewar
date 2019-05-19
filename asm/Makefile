@@ -21,6 +21,7 @@ SRC			=	$(SRCDIR)/main.c				\
 				$(SRCDIR)/add_needed_label.c	\
 				$(SRCDIR)/compile.c				\
 				$(SRCDIR)/fill_needed_label.c	\
+				$(SRCDIR)/free_all.c			\
 				$(SRCDIR)/get_args_type.c		\
 				$(SRCDIR)/get_name_and_comment.c\
 				$(SRCDIR)/get_next_instruction.c\

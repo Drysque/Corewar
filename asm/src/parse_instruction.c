@@ -31,7 +31,7 @@ static void add_label(char *label_name, label_t **label_list)
     label_t *new_label = my_calloc(sizeof(label_t));
 
     check_valid_label(label_name, *label_list);
-    new_label->name = label_name;
+    new_label->name = my_strdup(label_name);
     new_label->offset = offset_pos(0, GET);
     new_label->next_label = *label_list;
     *label_list = new_label;
@@ -60,4 +60,7 @@ void parse_instruction(char *instruction, label_t **label_list,
     }
     else
         add_instruction(tab, op_list);
+    for (int i = 0; tab[i]; i++)
+        free(tab[i]);
+    free(tab);
 }
