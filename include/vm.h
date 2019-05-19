@@ -18,31 +18,50 @@
 
 /*                  Process structure                       */
 typedef struct process_list_s {
-    int carry;                              // carry is set to 1 if the last instruction worked
-    int fd;                                 // binary file fd closed when champion is load in memory
-    short pc;                               // program counter (offset from address to current instruction) in 2 bytes
-    int cycles_left;                        // cycles left before instruction execution
-    int cycles_to_die;                      // cycles left before death if no live instruction is called
-    header_t header;                        // header of the binary
-    int registers[REG_NUMBER];              // registers of the binary
-    int prog_number;                        // actual programm number
-    unsigned long int address;              // address of the first programm instruction
-    struct process_list_s *next;            // pointer to next process
+    // carry is set to 1 if the last instruction worked
+    int carry;
+    // binary file fd closed when champion is load in memory
+    int fd;
+    // program counter (offset from address to current instruction) in 2 bytes
+    short pc;
+    // cycles left before instruction execution
+    int cycles_left;
+    // cycles left before death if no live instruction is called
+    int cycles_to_die;
+    // header of the binary
+    header_t header;
+    // registers of the binary
+    int registers[REG_NUMBER];
+    // actual programm number
+    int prog_number;
+    // address of the first programm instruction
+    unsigned long int address;
+    // pointer to next process
+    struct process_list_s *next;
 } process_t;
 
 /*                  VM structure                       */
 typedef struct environment_s {
-    int nbr_cycle;                          // used with --dump to display memory
-    int last_player_alive;                  // last player to say live is wins
-    int cycle_to_die;                       // global Cycle to die that will be updated
-    unsigned int live_instruction_nb;       // global count of live instruction calls
-    unsigned char arena[MEM_SIZE];          // equivalent of RAM memory
-    process_t *processes_tail;              // end of processes linked list
-    process_t *processes_head;              // beginning of proccesses list
+    // used with --dump to display memory
+    int nbr_cycle;
+    // last player to say live is wins
+    int last_player_alive;
+    // global Cycle to die that will be updated
+    int cycle_to_die;
+    // global count of live instruction calls
+    unsigned int live_instruction_nb;
+    // equivalent of RAM memory
+    unsigned char arena[MEM_SIZE];
+    // end of processes linked list
+    process_t *processes_tail;
+    // beginning of proccesses list
+    process_t *processes_head;
 } environment_t;
 
-#define PROC_TAIL(env) (env->processes_tail)    // gives the current process focused by scheduler
-#define PROC_HEAD(env) (env->processes_head)    // gives the beginning of the process list
+// gives the current process focused by scheduler
+#define PROC_TAIL(env) (env->processes_tail)
+// gives the beginning of the process list
+#define PROC_HEAD(env) (env->processes_head)
 
 static const int ERROR = 84;                // error code
 
@@ -79,7 +98,8 @@ void my_memcpy(void *dest, void *src, size_t size);
 ///  nb = 1 => 0b11 ...
 #define GET_BITS(byte, nb) ((byte >> (2 * nb)) & 0b11)
 
-// gives the current instruction mnemonique (ex: 0x01 if live is the current instruction)
+/// gives the current instruction mnemonique (ex: 0x01 if live is
+/// the current instruction)
 #define INSTRUCTION(env) (env->arena[(env->processes_tail->address + env->processes_tail->pc) % MEM_SIZE])
 
 /*                  INSTRUCTIONS                    */
@@ -90,15 +110,15 @@ void my_memcpy(void *dest, void *src, size_t size);
 static const int OP_ERROR = 1; // operation error code
 
 /// code: 0x01
-/// coding_byte:
-/// parameters:
-/// action:
+/// coding_byte: no
+/// parameters: direct
+/// action: says live and increment the global nb_live
 int op_live(environment_t *env);
 
 /// code: 0x02
-/// coding_byte:
-/// parameters:
-/// action:
+/// coding_byte: yes
+/// parameters: /
+/// action: load a value in memory or in a register
 int op_ld(environment_t *env);
 
 /// code: 0x03
@@ -156,27 +176,27 @@ int op_ldi(environment_t *env);
 int op_sti(environment_t *env);
 
 /// code: 0x0c
-/// coding_byte:
-/// parameters:
-/// action:
+/// coding_byte: no
+/// parameters: one index for the new cursos
+/// action: duplicate a process with a new cursor
 int op_fork(environment_t *env);
 
 /// code: 0x0d
 /// coding_byte:
 /// parameters:
-/// action:
+/// action: ld without %IDX_MOD
 int op_lld(environment_t *env);
 
 /// code: 0x0e
 /// coding_byte:
 /// parameters:
-/// action:
+/// action: ldi without %IDX_MOD
 int op_lldi(environment_t *env);
 
 /// code: 0x0f
-/// coding_byte:
-/// parameters:
-/// action:
+/// coding_byte: no
+/// parameters: one new offset index
+/// action: fork without %IDX_MOD
 int op_lfork(environment_t *env);
 
 /// code: 0x10
