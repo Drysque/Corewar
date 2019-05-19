@@ -36,7 +36,6 @@ static int run_instruction(environment_t *env)
 
 static void check_cycles(environment_t *env)
 {
-
     if (PROC_TAIL(env)->cycles_to_die <= 0)
         return;
     PROC_TAIL(env)->cycles_to_die -= 1;
