@@ -41,13 +41,8 @@ int *index, bool *in_process)
     if (my_strcmp(argv[*index - 1], "-dump"))
         return (ERROR);
     PROC_TAIL(env)->fd = open(argv[*index], O_RDONLY);
-    if (PROC_TAIL(env)->fd == -1) {
-        free(PROC_TAIL(env));
-        PROC_TAIL(env) = NULL;
-        for (process_t *tail = PROC_HEAD(env); tail != NULL;
-        tail = tail->next)
-            PROC_TAIL(env) = tail;
-    }
+    if (PROC_TAIL(env)->fd == -1)
+        my_error("Cannot open file.\n");
     *in_process = false;
     return (0);
 }

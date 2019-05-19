@@ -56,6 +56,8 @@ int load_champions(environment_t *env)
 {
     int prog_nb = 0;
 
+    if (!get_list_len(PROC_HEAD(env)))
+        return (ERROR);
     for (process_t *tail = PROC_HEAD(env);
     tail != NULL; tail = tail->next) {
         if (read(tail->fd, &tail->header, sizeof(header_t))
