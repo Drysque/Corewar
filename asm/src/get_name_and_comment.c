@@ -17,29 +17,34 @@ static const char *ERRORS_COMMENT[] = {
     "\n\t\e[1m\e[31mWarning:\e[0m No comment is specified\n\n",
     "The comment is too long"};
 
-static void check_nothing_else(char *str)
+static char *comment_warning(char *str)
 {
-    for (int i = 0; str[i] && str[i] != COMMENT_CHAR; i++)
-        if (is_one_of_them(str[i], " \t") == false) {
-            my_printf(
-                    "\n\tline %d: \e[1m\e[31mSyntax error:\e[0m \e[5m%c\e[0m "
-                "unexpected after quotes\n\n", line_counter(GET), str[i]);
-            exit(84);
-        }
+    my_printf(ERRORS_COMMENT[1]);
+    return str;
 }
 
-static void remove_quotes(char *str)
+static char *get_comment(int fd, char *to_write)
 {
-    if (str[0] == '\"') {
-        for (int i = 1; str[i]; i++)
-            if (str[i] == '\"') {
-                str[i] = 0;
-                check_nothing_else(&str[i + 1]);
-                return;
-            }
+    int index = 0;
+    char *str = get_next_instruction(fd);
+    int len = my_strlen(COMMENT_CMD_STRING);
+
+    if (str == NULL)
+        return comment_warning(NULL);
+    for (; str[index] && is_one_of_them(str[index], " \t"); index++);
+    if (my_strncmp(&str[index], COMMENT_CMD_STRING, len)) {
+        index += len;
+        for (; str[index] && is_one_of_them(str[index], " \t"); index++);
+        if (str[index] == '\0')
+            my_error(ERRORS_COMMENT[0]);
+        remove_quotes(&str[index++]);
+        if (my_strlen(&str[index]) > COMMENT_LENGTH)
+            my_error(ERRORS_COMMENT[2]);
+        my_strcpy(to_write, &str[index]);
+        free(str);
+        return get_next_instruction(fd);
     } else
-        my_error("Syntax error:\e[0m expected opening '\e[5m\"\e[0m'");
-    my_error("Syntax error:\e[0m expected closing '\e[5m\"\e[0m'");
+        return comment_warning(str);
 }
 
 static void get_name(int fd, char *to_write)
@@ -63,34 +68,6 @@ static void get_name(int fd, char *to_write)
     } else
         my_error(ERRORS_NAME[1]);
     free(str);
-}
-
-static char *get_comment(int fd, char *to_write)
-{
-    int index = 0;
-    char *str = get_next_instruction(fd);
-    int len = my_strlen(COMMENT_CMD_STRING);
-
-    if (str == NULL) {
-        my_printf(ERRORS_COMMENT[1]);
-        return NULL;
-    }
-    for (; str[index] && is_one_of_them(str[index], " \t"); index++);
-    if (my_strncmp(&str[index], COMMENT_CMD_STRING, len)) {
-        index += len;
-        for (; str[index] && is_one_of_them(str[index], " \t"); index++);
-        if (str[index] == '\0')
-            my_error(ERRORS_COMMENT[0]);
-        remove_quotes(&str[index++]);
-        if (my_strlen(&str[index]) > COMMENT_LENGTH)
-            my_error(ERRORS_COMMENT[2]);
-        my_strcpy(to_write, &str[index]);
-        free(str);
-        return get_next_instruction(fd);
-    } else {
-        my_printf(ERRORS_COMMENT[1]);
-        return str;
-    }
 }
 
 char *get_name_and_comment(int fd, header_t *header)

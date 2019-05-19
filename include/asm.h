@@ -43,6 +43,7 @@ typedef struct label_s {
     struct label_s *next_label;
 } label_t;
 
+void remove_quotes(char *str);
 char *get_next_instruction(int fd);
 int get_no_endian(int nb, int size);
 void compile(int fd, char *new_file);

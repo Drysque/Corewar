@@ -28,6 +28,7 @@ SRC			=	$(SRCDIR)/main.c				\
 				$(SRCDIR)/get_no_endian.c		\
 				$(SRCDIR)/offset_manage.c		\
 				$(SRCDIR)/parse_instruction.c	\
+				$(SRCDIR)/remove_quotes.c		\
 				$(SRCDIR)/write_in_file.c		\
 
 OBJ			=	$(SRC:.c=.o)
