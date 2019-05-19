@@ -16,6 +16,7 @@ NAME	=	libmy.a
 SRC		=	my_printf.c				\
 			format_switches.c		\
 			get_next_line.c			\
+			line_counter.c			\
 			my_calloc.c				\
 			my_error.c				\
 			my_getnbr.c				\

@@ -10,16 +10,20 @@
 
 int op_add(environment_t *env)
 {
-    int index = INSTRUCTION(env);
-    char coding_byte = (env->arena[(PROC_TAIL(env)->address +
-    PROC_TAIL(env)->pc + 1) % MEM_SIZE]);
+    char coding_byte = env->arena[(PROC_TAIL(env)->address +
+    PROC_TAIL(env)->pc + 1) % MEM_SIZE];
+    int arg1 = 0;
+    int arg2 = 0;
+    int arg3 = 0;
 
-    if (index != 0x04 || coding_byte !=
-    (0b01 << 6 | 0b01 << 4 | 0b01 << 2 | 0b00))
+    PROC_TAIL(env)->carry = 0;
+    if (INSTRUCTION(env) != 0x04 || GET_BITS(coding_byte, 0) != 0b00 ||
+    GET_BITS(coding_byte, 1) != 0b01)
         return (OP_ERROR);
-    PROC_TAIL(env)->registers[(PROC_TAIL(env)->address +
-    PROC_TAIL(env)->pc + 4) % MEM_SIZE][0] =
-    (PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 2) +
-    (PROC_TAIL(env)->address + PROC_TAIL(env)->pc + 3);
-    return (5);
+    arg1 = get_arg(env, 1);
+    arg2 = get_arg(env, 2);
+    arg3 = get_arg(env, 3);
+    PROC_TAIL(env)->registers[arg3] = (arg1 + arg2);
+    PROC_TAIL(env)->carry = 1;
+    return (get_instruction_size(env));
 }

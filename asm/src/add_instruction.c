@@ -18,8 +18,8 @@ static void fill_op(op_list_t *new_op, char **instr_tab, op_t *op)
     if (is_one_of_them(op->code, NO_CODING_BYTE) == false)
         offset_pos(1, ADD);
     if (my_tablen((char const **)&instr_tab[1]) != op->nbr_args) {
-        my_printf("\n\t\e[1m\e[31mWrong number of arguments:\e[0m %s "
-            "(\e[5m%d\e[0m, expected %d)\n\n", instr_tab[0],
+        my_printf("\n\tline %d: \e[1m\e[31mWrong number of arguments:\e[0m %s "
+            "(\e[5m%d\e[0m, expected %d)\n\n", line_counter(GET), instr_tab[0],
             my_tablen((char const **)&instr_tab[1]), op->nbr_args);
         exit(84);
     }
@@ -39,10 +39,8 @@ void add_instruction(char **instr_tab, op_list_t **op_list)
             fill_op(new_op, instr_tab, &op_tab[i]);
             new_op->next_op = *op_list;
             *op_list = new_op;
-            // printf("total bytes theorically written: \e[1m\e[32m%d\e[0m (%d)\n", offset_pos(0, GET) + sizeof(header_t), offset_pos(0, GET));
             return;
         }
     }
-    my_printf("\n\t\e[1m\e[31mUnknown instruction:\e[0m %s\n\n", instr_tab[0]);
-    exit(84);
+    my_error_str("Unknown instruction:\e[0m %s", instr_tab[0]);
 }
