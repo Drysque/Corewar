@@ -8,7 +8,7 @@
 #include "vm.h"
 #include "my.h"
 
-void dump_arena(char arena[MEM_SIZE])
+void dump_arena(unsigned char arena[MEM_SIZE])
 {
     for (int i = 0; i < MEM_SIZE; i += 1) {
         my_printf("%x", arena[i]);

@@ -91,7 +91,7 @@ int run_vm(environment_t *env);
 
 process_t *get_list_index(process_t *head, int nb);
 void my_memcpy(void *dest, void *src, size_t size);
-void dump_arena(char arena[MEM_SIZE]);
+void dump_arena(unsigned char arena[MEM_SIZE]);
 
 /// gives the NBth bit pairs in a byte
 /// expl with byte = 10 10 11 01
