@@ -21,7 +21,8 @@ static void check_nothing_else(char *str)
 {
     for (int i = 0; str[i] && str[i] != COMMENT_CHAR; i++)
         if (is_one_of_them(str[i], " \t") == false) {
-            my_printf("\n\tline %d: \e[1m\e[31mSyntax error:\e[0m \e[5m%c\e[0m "
+            my_printf(
+                    "\n\tline %d: \e[1m\e[31mSyntax error:\e[0m \e[5m%c\e[0m "
                 "unexpected after quotes\n\n", line_counter(GET), str[i]);
             exit(84);
         }
