@@ -9,7 +9,7 @@
 #include "op.h"
 #include "my.h"
 
-static void init_processes(environment_t *env)
+void init_processes(environment_t *env)
 {
     for (process_t *tail = PROC_HEAD(env); tail; tail = tail->next) {
         tail->cycles_left = op_tab[INSTRUCTION(env) % 16].nbr_cycles;
@@ -20,7 +20,7 @@ static void init_processes(environment_t *env)
     }
 }
 
-static int run_instruction(environment_t *env)
+int run_instruction(environment_t *env)
 {
     static int (*inst_tab[])(environment_t *env) =
     {&op_live, &op_ld, &op_st, &op_add, &op_sub,
@@ -34,7 +34,7 @@ static int run_instruction(environment_t *env)
     return (inst_tab[index](env));
 }
 
-static void check_cycles(environment_t *env)
+void check_cycles(environment_t *env)
 {
     if (PROC_TAIL(env)->cycles_to_die <= 0)
         return;
