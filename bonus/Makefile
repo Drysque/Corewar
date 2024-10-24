@@ -20,6 +20,7 @@ SRC =	src/csfml.c								\
 	$(SRCDIR)/parameters/get_parameters.c		\
 	$(SRCDIR)/core/load_champions.c				\
 	$(SRCDIR)/core/run_vm.c						\
+	$(SRCDIR)/core/dump.c						\
 	$(SRCDIR)/op/live.c							\
 	$(SRCDIR)/op/ld.c							\
 	$(SRCDIR)/op/st.c							\
@@ -45,7 +46,7 @@ CPPFLAGS	=	-I ./includes -I ../corewar/src -I ../include
 
 CFLAGS		+=	-Wall -Wextra
 
-LDFLAGS	=	 -lm -L../lib/my
+LDFLAGS	=	 -L../lib/my
 
 LDLIBS	=	-lm $(CSFML_LIB) -lmy
 

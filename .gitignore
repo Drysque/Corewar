@@ -1,4 +1,8 @@
 .vscode
 
+bonus/corewar_gui
+corewar/corewar
+asm/asm
+
 *.o
 *.a
