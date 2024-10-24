@@ -16,7 +16,7 @@ RM		?= 	rm -f
 SRCDIR	=	../corewar/src
 
 SRC =	src/csfml.c								\
-	$(SRCDIR)/main.c							\
+	src/main.c							\
 	$(SRCDIR)/parameters/get_parameters.c		\
 	$(SRCDIR)/core/load_champions.c				\
 	$(SRCDIR)/core/run_vm.c						\
@@ -42,7 +42,7 @@ SRC =	src/csfml.c								\
 
 CSFML_LIB	=	-lcsfml-system -lcsfml-graphics -lcsfml-window  -lcsfml-audio
 
-CPPFLAGS	=	-I ./includes -I ../corewar/src -I ../include
+CPPFLAGS	=	-I ./include -I ../corewar/src -I ../include
 
 CFLAGS		+=	-Wall -Wextra
 
